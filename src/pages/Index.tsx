@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 import { WelcomeScreen } from '@/components/questionnaire/WelcomeScreen';
 import { QuestionRenderer } from '@/components/questionnaire/QuestionRenderer';
 import { ProgressBar } from '@/components/questionnaire/ProgressBar';
@@ -87,71 +89,81 @@ const Index = () => {
   if (screen === 'results') {
     const results = evaluateResults(answers, questionnaireData.results);
     return (
-      <ResultsScreen
-        results={results}
-        thankYouData={questionnaireData.thankYou}
-        onReview={handleReview}
-      />
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1">
+          <ResultsScreen
+            results={results}
+            thankYouData={questionnaireData.thankYou}
+            onReview={handleReview}
+          />
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12">
-      <div className="max-w-3xl mx-auto">
-        <Card className="p-6 md:p-10 animate-fade-in">
-          <ProgressBar
-            current={currentSectionIndex + 1}
-            total={totalSections}
-            sectionTitle={currentSection.title}
-          />
-
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground mb-2">
-                {currentSection.title}
-              </h2>
-              {currentSection.description && (
-                <p className="text-muted-foreground">
-                  {currentSection.description}
-                </p>
-              )}
-            </div>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1 bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12">
+        <div className="max-w-3xl mx-auto">
+          <Card className="p-6 md:p-10 animate-fade-in">
+            <ProgressBar
+              current={currentSectionIndex + 1}
+              total={totalSections}
+              sectionTitle={currentSection.title}
+            />
 
             <div className="space-y-8">
-              {currentSection.questions.map((question) => (
-                <QuestionRenderer
-                  key={question.id}
-                  question={question}
-                  answer={answers[question.id]}
-                  onAnswer={handleAnswer}
-                  allAnswers={answers}
-                />
-              ))}
-            </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground mb-2">
+                  {currentSection.title}
+                </h2>
+                {currentSection.description && (
+                  <p className="text-muted-foreground">
+                    {currentSection.description}
+                  </p>
+                )}
+              </div>
 
-            <div className="flex gap-4 pt-8 border-t border-border">
-              {currentSectionIndex > 0 && (
+              <div className="space-y-8">
+                {currentSection.questions.map((question) => (
+                  <QuestionRenderer
+                    key={question.id}
+                    question={question}
+                    answer={answers[question.id]}
+                    onAnswer={handleAnswer}
+                    allAnswers={answers}
+                  />
+                ))}
+              </div>
+
+              <div className="flex gap-4 pt-8 border-t border-border">
+                {currentSectionIndex > 0 && (
+                  <Button
+                    variant="outline"
+                    onClick={handlePrevious}
+                    className="gap-2"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Previous
+                  </Button>
+                )}
+
                 <Button
-                  variant="outline"
-                  onClick={handlePrevious}
-                  className="gap-2"
+                  onClick={handleNext}
+                  className="ml-auto gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
-                  <ArrowLeft className="w-4 h-4" />
-                  Previous
+                  {currentSectionIndex < totalSections - 1 ? 'Next Section' : 'View Results'}
+                  <ArrowRight className="w-4 h-4" />
                 </Button>
-              )}
-
-              <Button
-                onClick={handleNext}
-                className="ml-auto gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
-              >
-                {currentSectionIndex < totalSections - 1 ? 'Next Section' : 'View Results'}
-                <ArrowRight className="w-4 h-4" />
-              </Button>
+              </div>
             </div>
-          </div>
-        </Card>
-      </div>
+          </Card>
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 };

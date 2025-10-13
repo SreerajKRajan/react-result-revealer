@@ -64,7 +64,7 @@ export const WelcomeScreen = ({ onStart, data }: WelcomeScreenProps) => {
           </div>
 
           <p className="text-sm text-muted-foreground pt-4">
-            Thank you for trusting <strong>Advanced Tax Group</strong> — we look forward to helping you maximize your savings and plan for a stronger financial future.
+            Thank you for trusting <strong>ATG – Advanced Tax Group</strong> — we look forward to helping you maximize your savings and plan for a stronger financial future.
           </p>
         </div>
       </Card>

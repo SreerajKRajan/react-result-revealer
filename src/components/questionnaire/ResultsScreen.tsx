@@ -46,7 +46,7 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
 
             <div className="pt-4 space-y-3">
               <p className="leading-relaxed">
-                At <strong>Advanced Tax Group</strong>, we use these results to provide guidance and recommendations. While we offer professional insight, remember that <strong>you are ultimately responsible for implementing any strategies</strong>. Proper documentation, timing, and adherence to IRS rules are essential to fully realize the benefits of these planning strategies.
+                At <strong>ATG – Advanced Tax Group</strong>, we use these results to provide guidance and recommendations. While we offer professional insight, remember that <strong>you are ultimately responsible for implementing any strategies</strong>. Proper documentation, timing, and adherence to IRS rules are essential to fully realize the benefits of these planning strategies.
               </p>
 
               <p className="leading-relaxed">
@@ -135,7 +135,7 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
         {results.length === 0 && (
           <Card className="p-8 text-center">
             <p className="text-muted-foreground">
-              Based on your responses, we'll provide personalized recommendations during your consultation with Advanced Tax Group.
+              Based on your responses, we'll provide personalized recommendations during your consultation with ATG – Advanced Tax Group.
             </p>
           </Card>
         )}
