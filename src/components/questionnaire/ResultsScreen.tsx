@@ -18,7 +18,7 @@ interface ResultsScreenProps {
 export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreenProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12">
-      <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
+      <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
         {/* Header */}
         <Card className="p-8 md:p-12">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-6">

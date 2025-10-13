@@ -79,10 +79,16 @@ const Index = () => {
 
   if (screen === 'welcome') {
     return (
+      <div className="min-h-screen flex flex-col">
+      <Header />
+
       <WelcomeScreen
         onStart={handleStart}
         data={questionnaireData.welcome}
       />
+      <Footer />
+      </div>
+
     );
   }
 
@@ -107,7 +113,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <Card className="p-6 md:p-10 animate-fade-in">
             <ProgressBar
               current={currentSectionIndex + 1}

@@ -16,7 +16,7 @@ interface WelcomeScreenProps {
 export const WelcomeScreen = ({ onStart, data }: WelcomeScreenProps) => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-secondary/20">
-      <Card className="w-full max-w-3xl p-8 md:p-12 animate-fade-in shadow-lg">
+      <Card className="w-full max-w-6xl p-8 md:p-12 animate-fade-in shadow-lg">
         <div className="space-y-6">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground">
             {data.title}
