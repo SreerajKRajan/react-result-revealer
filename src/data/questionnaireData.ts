@@ -109,12 +109,12 @@ export const questionnaireData: QuestionnaireData = {
       questions: [
         {
           id: "q3-has-children",
-          text: "Do you have children who are 18 years old or younger?",
+          text: "Do you have children under the age of 18?",
           type: "yes-no"
         },
         {
-          id: "q3-legitimate-work",
-          text: "Could your children perform legitimate work for your business (e.g., filing, social media, cleaning, data entry)?",
+          id: "q3-capable-tasks",
+          text: "Are they interested in or capable of helping with business-related tasks (e.g., marketing, admin, social media, cleaning, filing)?",
           type: "yes-no",
           conditionalOn: {
             questionId: "q3-has-children",
@@ -122,11 +122,20 @@ export const questionnaireData: QuestionnaireData = {
           }
         },
         {
-          id: "q3-willing-to-document",
-          text: "Would you be willing to document their work, pay them a reasonable wage, and maintain proper records?",
+          id: "q3-paid-through-payroll",
+          text: "Have you ever paid your children through payroll for legitimate business services?",
           type: "yes-no",
           conditionalOn: {
-            questionId: "q3-legitimate-work",
+            questionId: "q3-capable-tasks",
+            value: "yes"
+          }
+        },
+        {
+          id: "q3-explore-payroll-strategy",
+          text: "Would you like to explore setting up a payroll strategy to shift income and fund tax-advantaged accounts for your kids (e.g., Roth IRA)?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q3-capable-tasks",
             value: "yes"
           }
         }
@@ -184,8 +193,8 @@ export const questionnaireData: QuestionnaireData = {
     },
     {
       id: "result-paying-kids",
-      title: "Paying Your Children: A Tax-Smart Strategy",
-      content: "If you have children and own a business, paying them for legitimate work can create significant tax benefits — for both you and them.\n\nWhy It Works\n\nThe IRS allows you to pay your children a reasonable wage for work they actually perform in your business. If done correctly:\n\n• Your business gets a tax deduction for their wages.\n• Your children may owe little to no income tax (if they earn below the standard deduction).\n• If your business is a sole proprietorship or single-member LLC (and your child is under 18), their wages are not subject to Social Security, Medicare, or FUTA taxes.\n\nKey Rules\n\n✓ The work must be legitimate.\n• Examples: Filing, data entry, social media management, cleaning, inventory, customer service.\n\n✓ The wage must be reasonable.\n• Pay them what you'd pay an unrelated worker for the same job.\n• Document hours worked and tasks completed.\n\n✓ Proper documentation is essential.\n• Keep timesheets, job descriptions, and pay records.\n• Pay them via check or direct deposit (not cash).\n• File a W-2 at year-end.\n\n✓ Age matters.\n• Under 18: Exempt from Social Security, Medicare, and FUTA (if sole prop or partnership with only the parents).\n• 18 and older: Subject to normal payroll taxes.\n\nTax Benefits\n\n1. Business deduction: Reduces your taxable income.\n2. Child's income: May be tax-free if below the standard deduction (~$14,600 for 2025).\n3. Teach financial responsibility: You can help them open a Roth IRA, save for college, or learn budgeting.\n\nExample\n\nYou pay your 15-year-old $10,000 for social media management, filing, and data entry.\n\n□ Your business: $10,000 deduction.\n□ Your child: Likely owes $0 in federal income tax (under the standard deduction).\n□ No payroll taxes (if under 18 and you're a sole prop).\n\nWhat to Avoid\n\n✗ Paying for work they didn't actually do.\n✗ Paying an unreasonably high wage.\n✗ Failing to keep records.\n\nBottom line: Paying your children for real work is a powerful tax strategy that shifts income, reduces your tax burden, and teaches them valuable skills — all while staying fully compliant with IRS rules.",
+      title: "Paying Your Kids Through Your Business: A Smart Tax Strategy",
+      content: "The IRS allows you to pay your children a reasonable wage for real work performed in your business. This shifts income from your higher tax bracket into your child's lower (or zero) tax bracket — while still getting a business deduction.\n\nIRS Reference:\n\n• IRC §162(a) — Allows deductions for \"ordinary and necessary\" business expenses (including wages).\n• IRS Publication 15 (Circular E) — Covers payroll and employment tax rules.\n\nHow It Works\n\n1. Your business pays your child for actual services they perform.\n2. The business gets a deduction for wages paid.\n3. The child pays little to no tax if their income stays under the standard deduction ($14,600 in 2024).\n4. In many cases, no payroll taxes are required if the business is a sole proprietorship or an LLC taxed as a sole proprietorship and the child is under 18.\n\n✓ Step 1: Identify legitimate work\n\nExamples: Social media help, marketing, administrative tasks, cleaning, filing, photography, website updates, stocking inventory.\n\nWork must be age-appropriate and benefit the business.\n\n✓ Step 2: Set a reasonable wage\n\n• Pay your child the going market rate for the work performed.\n• Document hours worked and tasks completed (timesheets or job descriptions).\n\n✓ Step 3: Run payroll correctly\n\nFor Sole Proprietors/LLCs taxed as sole proprietorships:\n\n• Wages to children under 18 are exempt from Social Security, Medicare, and FUTA taxes.\n\nFor S-Corps, Partnerships, or C-Corps:\n\n• Normal payroll tax rules apply, but your strategy still works.\n\n✓ Step 4: Issue a W-2 at year-end\n\n• Just like any employee, your child should get a W-2 showing their wages.\n• File through payroll software or with your accountant.\n\n✓ Step 5: Put their income to work\n\n• Your child can open a Roth IRA with earned income (huge long-term growth opportunity).\n• Or simply save/invest the money for education or future needs.\n\nExample\n\nYou pay your 15-year-old child $12,000 for legitimate work in your business.\n\n• Business outcome: $12,000 deduction (saving ~$3,000+ in taxes if you're in a 25% bracket).\n• Child outcome: Pays $0 in income tax (since income is below the $14,600 standard deduction for 2024).\n• If you're a sole proprietor/LLC, also no payroll tax on those wages.\n\nKey Takeaways\n\n✓ Must be real work with reasonable pay.\n✓ Wages are deductible for the business.\n✓ Children pay little to no income tax.\n✓ Kids under 18 working for sole props/LLCs avoid payroll taxes.\n✓ Great opportunity to fund a Roth IRA or teach financial skills.\n✗ Do not abuse — \"no-show jobs\" or inflated wages won't hold up in an audit.\n\nBottom line: By paying your kids for legitimate work, you turn a family expense into a business deduction while giving your child income that's often tax-free — a win-win strategy backed by IRC §162(a).",
       conditions: [
         {
           questionId: "q3-has-children",
@@ -193,12 +202,12 @@ export const questionnaireData: QuestionnaireData = {
           value: "yes",
           subConditions: [
             {
-              questionId: "q3-legitimate-work",
+              questionId: "q3-capable-tasks",
               operator: "equals",
               value: "yes"
             },
             {
-              questionId: "q3-willing-to-document",
+              questionId: "q3-explore-payroll-strategy",
               operator: "equals",
               value: "yes"
             }
