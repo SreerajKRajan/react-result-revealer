@@ -140,6 +140,124 @@ export const questionnaireData: QuestionnaireData = {
           }
         }
       ]
+    },
+    {
+      id: "section-4",
+      title: "Section 4: Vehicle Purchases & Usage",
+      questions: [
+        {
+          id: "q4-own-lease-vehicle",
+          text: "Do you currently own or lease a vehicle that you use for business purposes?",
+          type: "yes-no"
+        },
+        {
+          id: "q4-business-percentage",
+          text: "Approximately what percentage of the vehicle's use is for business vs. personal?",
+          type: "numeric",
+          validation: {
+            min: 0,
+            max: 100
+          },
+          conditionalOn: {
+            questionId: "q4-own-lease-vehicle",
+            value: "yes"
+          }
+        },
+        {
+          id: "q4-purchased-considering",
+          text: "Did you purchase or are you considering purchasing a new or used vehicle this year?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q4-own-lease-vehicle",
+            value: "yes"
+          }
+        },
+        {
+          id: "q4-vehicle-details",
+          text: "If yes, what is the make, model, purchase price, and date of purchase?",
+          type: "text",
+          conditionalOn: {
+            questionId: "q4-purchased-considering",
+            value: "yes"
+          }
+        },
+        {
+          id: "q4-over-6000lbs",
+          text: "Is the vehicle over 6,000 lbs (gross vehicle weight rating), making it eligible for bonus depreciation?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q4-own-lease-vehicle",
+            value: "yes"
+          }
+        },
+        {
+          id: "q4-review-deductions",
+          text: "Would you like to review whether mileage deduction, actual expense deduction, or bonus depreciation provides the biggest tax benefit?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q4-own-lease-vehicle",
+            value: "yes"
+          }
+        }
+      ]
+    },
+    {
+      id: "section-5",
+      title: "Section 5: Inventory Planning",
+      questions: [
+        {
+          id: "q5-carry-inventory",
+          text: "Does your business carry physical inventory?",
+          type: "yes-no"
+        },
+        {
+          id: "q5-front-loading",
+          text: "Have you considered front-loading inventory purchases before year-end to reduce taxable income?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q5-carry-inventory",
+            value: "yes"
+          }
+        },
+        {
+          id: "q5-demand-shifts",
+          text: "Do you anticipate major shifts in demand that could impact inventory levels next year?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q5-carry-inventory",
+            value: "yes"
+          }
+        }
+      ]
+    },
+    {
+      id: "section-6",
+      title: "Section 6: Start-Up Costs",
+      questions: [
+        {
+          id: "q6-new-business",
+          text: "Did you recently launch or are you planning to launch a new business venture?",
+          type: "yes-no"
+        },
+        {
+          id: "q6-incurred-costs",
+          text: "Have you incurred costs related to: Business formation/legal fees, Licenses & permits, Marketing/advertising, Website or software development, Equipment or technology for a new line of business?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q6-new-business",
+            value: "yes"
+          }
+        },
+        {
+          id: "q6-guidance",
+          text: "Would you like guidance on how much of your start-up costs can be deducted immediately vs. amortized over time?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q6-incurred-costs",
+            value: "yes"
+          }
+        }
+      ]
     }
   ],
   results: [
@@ -208,6 +326,42 @@ export const questionnaireData: QuestionnaireData = {
             },
             {
               questionId: "q3-explore-payroll-strategy",
+              operator: "equals",
+              value: "yes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "result-vehicle-deductions",
+      title: "Using Vehicles in Your Business: Deduction Strategies",
+      content: "Owning or using a vehicle for business can create large deductions — but the strategy depends on your business's profitability.\n\nIRS References:\n\n• IRC §162(a) — Ordinary and necessary business expenses.\n• IRC §167 & §168(k) — Depreciation rules, including bonus depreciation.\n• IRS Publication 463 — Travel, Gift, and Car Expenses.\n\nTwo Main Options for Vehicle Deductions\n\n1. Actual Expense Method (with Depreciation/Bonus Depreciation)\n\n• Deducts expenses like gas, repairs, insurance, and depreciation.\n• Large vehicles (over 6,000 lbs GVWR) can qualify for 100% bonus depreciation (IRC §168(k)) in the year purchased.\n• Important: Your business must show a profit for these deductions to have value. If your business is losing money, depreciation won't reduce your tax bill.\n\n2. Standard Mileage Method\n\n• Deducts a set IRS rate per business mile (67 cents/mile for 2024).\n• Includes all costs of operation in the rate (gas, insurance, repairs).\n• Often better for businesses with lower profits or high-mileage, low-cost vehicles.\n\nSteps to Implement Vehicle Deductions\n\n✓ Step 1: Track Business Use\n\n• Keep a mileage log (apps like MileIQ, QuickBooks, or written logbooks).\n• Document starting mileage Jan 1 and ending mileage Dec 31.\n\n✓ Step 2: Determine Profitability\n\n• If your business is profitable → consider a purchase and use actual expenses/bonus depreciation.\n• If not profitable → stick with mileage tracking.\n\n✓ Step 3: Vehicle Purchase (if profitable)\n\n• Choose a vehicle that fits your business needs (Frequent travelers).\n• If over 6,000 lbs GVWR, you may be able to deduct up to 100% of the cost in year one via bonus depreciation.\n• Deduct loan interest if financed.\n\n✓ Step 4: Maintain Documentation\n\n• Purchase agreement, loan documents, mileage log, and percentage of business vs personal use.\n• If audited, IRS requires proof of business use.\n\nExample: Profitable Business\n\n• Business income: $120,000\n• Purchase 6,500 lb SUV for $70,000 in September.\n• Use 90% for business.\n• Deduction: $63,000 (via bonus depreciation).\n• At 25% tax bracket → $15,750 saved in taxes.\n\nExample: Not Profitable Business\n\n• Business income: $10,000, expenses already $15,000.\n• Buying a $70,000 SUV would create a loss that doesn't help you today.\n• Better move: Track mileage (say 5,000 miles × $0.67 = $3,350 deduction).\n\nKey Takeaways\n\n✓ Must have business profit for vehicle purchase deductions to help.\n✓ Vehicles over 6,000 lbs may qualify for big upfront deductions.\n✓ Mileage method is best for low-profit or high-mileage situations.\n✓ Documentation is critical — track mileage log religiously.\n✗ Don't buy a vehicle \"just for the tax write-off\" — make sure it's an ordinary and necessary business expense (IRC §162).\n\nBottom line: If you're starting a business, don't miss out on deducting up to $10,000 of your pre-opening expenses immediately, with the rest amortized under IRC §195 and §248.",
+      conditions: [
+        {
+          questionId: "q4-own-lease-vehicle",
+          operator: "equals",
+          value: "yes"
+        }
+      ]
+    },
+    {
+      id: "result-startup-costs",
+      title: "Deducting Start-Up & Organizational Costs",
+      content: "When you launch a new business, the IRS allows special treatment for the costs you incur before your business officially opens. These are broken into two categories:\n\n1. Start-Up Costs — Expenses to investigate, create, or prepare your business to begin operations.\n2. Organizational Costs — Costs directly tied to legally setting up your business entity (LLC, corporation, partnership, etc.).\n\nIRS References:\n\n• IRC §195 — Start-up expenditures.\n• IRC §248 — Organizational expenditures.\n• IRS Publication 535 — Business Expenses.\n\nWhat Qualifies?\n\n✓ Start-Up Costs (before the business begins):\n\n• Market research, competitor analysis.\n• Advertising, promotional costs, or travel for pre-opening business activities.\n• Employee training and wages before the business opens.\n• Professional services used in the planning phase.\n\n✓ Organizational Costs (entity formation):\n\n• Legal fees for drafting LLC operating agreement or corporate bylaws.\n• State incorporation/LLC filing fees.\n• Accounting fees for setting up books and records.\n• Expenses of organizational meetings.\n\n✗ Not Included:\n\n• Tangible assets (equipment, vehicles, property → depreciated instead).\n• Inventory purchased for resale (deducted once sold).\n• Costs after the business officially opens (those are operating expenses).\n\nHow the Deduction Works\n\n• You can deduct up to $5,000 of start-up costs AND up to $5,000 of organizational costs in your first year.\n• Any remaining costs must be amortized over 15 years (180 months).\n• The $5,000 immediate deduction begins to phase out once total cost exceed $50,000.\n\nSteps to Implement\n\n✓ Step 1: Track all pre-opening expenses separately from operating costs.\n✓ Step 2: Categorize into start-up vs. organizational.\n✓ Step 3: Deduct up to $10,000 immediately ($5k + $5k).\n✓ Step 4: Amortize the remainder over 15 years.\n\nExample\n\nYou spend $22,000 before officially opening:\n\n• $8,000 market research + advertising (start-up).\n• $6,000 attorney + state filing fees (organizational).\n• $8,000 employee training + pre-opening payroll (start-up).\n\nTotal = $22,000\n\nDeduction:\n\n• $5,000 (start-up) + $5,000 (organizational) = $10,000 immediate deduction.\n• Remaining $12,000 → amortized over 15 years → $800/year.\n\nKey Takeaways\n\n✓ Deduct up to $10,000 immediately for new business costs.\n✓ Spread the rest out over 15 years.\n✓ Careful tracking makes sure you don't miss deductions.\n✗ Assets, inventory, or post-opening costs are not included.\n\nBottom line: If you're starting a business, don't miss out on deducting up to $10,000 of your pre-opening expenses immediately, with the rest amortized under IRC §195 and §248.",
+      conditions: [
+        {
+          questionId: "q6-new-business",
+          operator: "equals",
+          value: "yes",
+          subConditions: [
+            {
+              questionId: "q6-incurred-costs",
+              operator: "equals",
+              value: "yes"
+            },
+            {
+              questionId: "q6-guidance",
               operator: "equals",
               value: "yes"
             }
