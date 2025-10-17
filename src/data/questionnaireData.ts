@@ -258,6 +258,184 @@ export const questionnaireData: QuestionnaireData = {
           }
         }
       ]
+    },
+    {
+      id: "section-7",
+      title: "Section 7: Marketing & Advertising Expenses",
+      questions: [
+        {
+          id: "q7-marketing-spend",
+          text: "Do you currently spend money on marketing or advertising for your business?",
+          type: "yes-no"
+        },
+        {
+          id: "q7-front-load",
+          text: "Would you like to front-load marketing or advertising costs before year-end to reduce taxable income?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q7-marketing-spend",
+            value: "yes"
+          }
+        },
+        {
+          id: "q7-track-expenses",
+          text: "Are you properly tracking all marketing expenses (digital ads, print, events, promotional materials)?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q7-marketing-spend",
+            value: "yes"
+          }
+        }
+      ]
+    },
+    {
+      id: "section-8",
+      title: "Section 8: Home Office Deduction",
+      questions: [
+        {
+          id: "q8-home-office",
+          text: "Do you regularly and exclusively use a portion of your home for business purposes?",
+          type: "yes-no"
+        },
+        {
+          id: "q8-square-footage",
+          text: "What is the approximate square footage of your home office compared to your total home?",
+          type: "numeric",
+          validation: {
+            min: 0
+          },
+          conditionalOn: {
+            questionId: "q8-home-office",
+            value: "yes"
+          }
+        },
+        {
+          id: "q8-rent-or-mortgage",
+          text: "Do you pay rent or a mortgage on your home?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q8-home-office",
+            value: "yes"
+          }
+        },
+        {
+          id: "q8-review-deductions",
+          text: "Would you like us to review potential deductions for utilities, internet, insurance, and maintenance?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q8-home-office",
+            value: "yes"
+          }
+        }
+      ]
+    },
+    {
+      id: "section-9",
+      title: "Section 9: Professional Services",
+      questions: [
+        {
+          id: "q9-professional-services",
+          text: "Do you currently pay for professional services such as: Legal advice, Accounting or tax services, Consulting or coaching, Bookkeeping or payroll?",
+          type: "yes-no"
+        },
+        {
+          id: "q9-evaluate-deductions",
+          text: "Would you like us to evaluate whether all of these costs are being captured as business deductions?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q9-professional-services",
+            value: "yes"
+          }
+        }
+      ]
+    },
+    {
+      id: "section-10",
+      title: "Section 10: Business Travel & Meals",
+      questions: [
+        {
+          id: "q10-business-travel",
+          text: "Do you travel for business purposes (client meetings, conferences, trade shows)?",
+          type: "yes-no"
+        },
+        {
+          id: "q10-track-expenses",
+          text: "Do you currently track travel expenses (airfare, hotels, meals, transportation)?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q10-business-travel",
+            value: "yes"
+          }
+        },
+        {
+          id: "q10-business-meals",
+          text: "Do you pay for business meals with clients, prospects, or employees?",
+          type: "yes-no"
+        },
+        {
+          id: "q10-document-meals",
+          text: "Do you document the purpose, attendees, and business nature of each meal?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q10-business-meals",
+            value: "yes"
+          }
+        }
+      ]
+    },
+    {
+      id: "section-11",
+      title: "Section 11: Equipment & Technology Purchases",
+      questions: [
+        {
+          id: "q11-purchased-equipment",
+          text: "Did you purchase equipment or technology for your business this year (computers, software, machinery)?",
+          type: "yes-no"
+        },
+        {
+          id: "q11-over-2500",
+          text: "Were any of these purchases over $2,500?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q11-purchased-equipment",
+            value: "yes"
+          }
+        },
+        {
+          id: "q11-section-179",
+          text: "Would you like to explore Section 179 expensing to deduct the full cost this year instead of depreciating over time?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q11-over-2500",
+            value: "yes"
+          }
+        }
+      ]
+    },
+    {
+      id: "section-12",
+      title: "Section 12: Retirement & Solo 401(k)",
+      questions: [
+        {
+          id: "q12-retirement-plans",
+          text: "Do you currently contribute to any retirement plans (IRA, Roth IRA, SEP, 401k, etc.)?",
+          type: "yes-no"
+        },
+        {
+          id: "q12-maximize-savings",
+          text: "Are you interested in maximizing retirement savings while also reducing taxable income?",
+          type: "yes-no",
+          conditionalOn: {
+            questionId: "q12-retirement-plans",
+            value: "yes"
+          }
+        },
+        {
+          id: "q12-solo-401k",
+          text: "Would you like to explore setting up a Solo 401(k) or other retirement plan through your business?",
+          type: "yes-no"
+        }
+      ]
     }
   ],
   results: [
@@ -362,6 +540,68 @@ export const questionnaireData: QuestionnaireData = {
             },
             {
               questionId: "q6-guidance",
+              operator: "equals",
+              value: "yes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "result-home-office",
+      title: "Home Office Deduction",
+      content: "If you use part of your home **regularly and exclusively** for your business, the IRS allows you to deduct a portion of your home expenses. This can significantly reduce your taxable income if done correctly.\n\n**IRS References:**\n\n• **IRC §280A** — Disallowance of certain expenses related to business use of home.\n• **IRS Publication 587** — Business Use of Your Home.\n\n**What Qualifies?**\n\n✓ To take the deduction, you must meet **both tests**:\n\n1. **Exclusive Use** — A specific area of your home must be used **only** for business (not your kitchen table, no dual use).\n2. **Regular Use** — The space must be used consistently for business (not once a month).\n\n✓ You must also meet **one** of these:\n\n• It's your **principal place of business**, OR\n• You use it to meet with clients/customers, OR\n• It's a separate structure (like a garage or studio) used for your business.\n\n**What Expenses Can Be Deducted?**\n\n• **Direct expenses** (repairs or improvements to the office space).\n• **Indirect expenses** (a percentage of mortgage interest, rent, property taxes, utilities, insurance, and depreciation).\n• **Simplified option:** Instead of tracking actual expenses, deduct **$5 per square foot**, up to 300 sq. ft. (max $1,500).\n\n**How the Deduction Works**\n\n1. **Regular Method:**\n   - Determine the % of your home used for business (sq. ft. of office ÷ total sq. ft. of home).\n   - Apply that % to allowable indirect expenses.\n   - Add in direct expenses separately.\n\n2. **Simplified Method:**\n   - Flat $5 per sq. ft. (up to 300 sq. ft.) → no receipts required.\n\n**Steps to Implement**\n\n✓ **Step 1: Designate a dedicated space** in your home for business only.\n✓ **Step 2: Measure the square footage** of your office and your entire home.\n✓ **Step 3: Choose your method** (regular vs. simplified).\n✓ **Step 4: Track and document expenses** (utilities, repairs, property taxes, etc.).\n✓ **Step 5: Report on your tax return** (Form 8829 for regular method).\n\n**Example**\n\n• Home size: 2,000 sq. ft.\n• Office: 200 sq. ft. (10%).\n• Total home-related expenses: $15,000 (mortgage interest, utilities, insurance).\n• **Deduction:**\n  - Regular method = 10% × $15,000 = **$1,500**.\n  - Simplified method = 200 × $5 = **$1,000**.\n\nIn this case, the regular method gives a larger deduction.\n\n**Key Takeaways**\n\n✓ Deduct home expenses tied to business use.\n✓ Must be **exclusive and regular** use — no dual use.\n✓ Two methods: **actual expense %** OR **simplified $5/sq. ft.**\n✓ Requires documentation in case of audit.\n✗ No deduction if the space is not exclusive to the business.\n\n**Bottom line:** If you run your business from home, the **home office deduction** (under IRC §280A) can save you money — but only if your use is **exclusively and regularly** for business purposes.",
+      conditions: [
+        {
+          questionId: "q8-home-office",
+          operator: "equals",
+          value: "yes",
+          subConditions: [
+            {
+              questionId: "q8-rent-or-mortgage",
+              operator: "equals",
+              value: "yes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "result-professional-services",
+      title: "Professional Services Deduction",
+      content: "Hiring professionals to help run your business isn't just smart — **it's tax deductible**. Expenses for legal, accounting, and other professional services are considered ordinary and necessary business expenses.\n\n**IRS References:**\n\n• **IRC §162(a)** — Deduction for ordinary and necessary business expenses.\n• **IRS Publication 535** — Business Expenses.\n\n**What Qualifies?**\n\n✓ **Deductible professional services include:**\n\n• Attorneys (legal advice, contracts, entity formation)\n• Accountants or CPAs (bookkeeping, tax preparation, payroll setup)\n• Consultants or coaches directly related to your business operations\n• Bookkeepers, virtual assistants, and specialized contractors\n\n✗ **Not deductible:**\n\n• Personal legal or tax matters unrelated to the business.\n• Professional memberships unrelated to business operations.\n\n**How the Deduction Works**\n\n1. Document the **purpose, date, location, and attendees** for each meal or travel expense.\n2. Track receipts and payment records.\n3. Deduct **50% of most business meals** (unless 100% deductible under special exceptions, e.g., employer-provided meals).\n4. Deduct **full cost of business travel expenses** (transportation, lodging, rental cars, parking, and tips).\n\n**Steps to Implement**\n\n✓ **Step 1: Keep a log of all business travel**\n  - Include: date, location, business purpose, and mileage if driving.\n\n✓ **Step 2: Separate personal and business expenses**\n  - Only the portion of meals or travel related to business is deductible.\n\n✓ **Step 3: Track receipts**\n  - Store receipts digitally or physically. IRS requires proof for audits.\n\n✓ **Step 4: Deduct properly**\n  - Use Schedule C (or business return) for expenses.\n  - Meals generally **50% deductible**, travel fully deductible when business-related.\n\n**Example**\n\nYou fly to another city for a client meeting:\n\n• Airfare: $400\n• Hotel: $600\n• Meals: $150\n• Taxi/Rideshare: $50\n\n**Deduction:**\n\n• Travel = $1,050 (fully deductible)\n• Meals = $75 (50% deductible)\n• **Total deduction = $1,125**\n\n**Key Takeaways**\n\n✓ Travel and meals must be **directly related to business**.\n✓ Keep receipts and a **detailed log of purpose and attendees**.\n✓ Meals generally **50% deductible**, travel expenses **fully deductible**.\n✗ Personal vacations or non-business meals are not deductible.\n\n**Bottom line:** Business travel and meals can save significant taxes when properly documented under **IRC §162(a)**. Track expenses carefully, separate personal costs, and claim deductions for trips and meals with a **clear business purpose**.",
+      conditions: [
+        {
+          questionId: "q9-professional-services",
+          operator: "equals",
+          value: "yes"
+        }
+      ]
+    },
+    {
+      id: "result-travel-meals",
+      title: "Business Travel & Meals Deduction",
+      content: "Business travel and meals are often **overlooked deductions** that can add up quickly. If you travel for business or pay for meals with a legitimate business purpose, these expenses are deductible.\n\n**IRS References:**\n\n• **IRC §162(a)** — Ordinary and necessary business expenses.\n• **IRC §274** — Limitations on meals and entertainment.\n• **IRS Publication 463** — Travel, Gift, and Car Expenses.\n\n**Deductible meals include:**\n\n• Meals with clients, prospects, or employees with a legitimate business purpose.\n• Meals at conferences or business meetings.\n\n✗ **Not deductible:**\n\n• Meals that are lavish, personal, or without a documented business purpose.\n• Travel or meals for **family** or vacation purposes with no business tie.\n\n**How the Deduction Works**\n\n1. Document the **purpose, date, location, and attendees** for each meal or travel expense.\n2. Track receipts and payment records.\n3. Deduct **50% of most business meals** (unless 100% deductible under special exceptions, e.g., employer-provided meals).\n4. Deduct **full cost of business travel expenses** (transportation, lodging, rental cars, parking, and tips).\n\n**Steps to Implement**\n\n✓ **Step 1: Keep a log of all business travel**\n  - Include: date, location, business purpose, and mileage if driving.\n\n✓ **Step 2: Separate personal and business expenses**\n  - Only the portion of meals or travel related to business is deductible.\n\n✓ **Step 3: Track receipts**\n  - Store receipts digitally or physically. IRS requires proof for audits.\n\n✓ **Step 4: Deduct properly**\n  - Use Schedule C (or business return) for expenses.\n  - Meals generally **50% deductible**, travel fully deductible when business-related.\n\n**Example**\n\nYou fly to another city for a client meeting:\n\n• Airfare: $400\n• Hotel: $600\n• Meals: $150\n• Taxi/Rideshare: $50\n\n**Deduction:**\n\n• Travel = $1,050 (fully deductible)\n• Meals = $75 (50% deductible)\n• **Total deduction = $1,125**\n\n**Key Takeaways**\n\n✓ Travel and meals must be **directly related to business**.\n✓ Keep receipts and a **detailed log of purpose and attendees**.\n✓ Meals generally **50% deductible**, travel expenses **fully deductible**.\n✗ Personal vacations or non-business meals are not deductible.\n\n**Bottom line:** Business travel and meals can save significant taxes when properly documented under **IRC §162(a)**. Track expenses carefully, separate personal costs, and claim deductions for trips and meals with a **clear business purpose**.",
+      conditions: [
+        {
+          questionId: "q10-business-travel",
+          operator: "equals",
+          value: "yes"
+        }
+      ]
+    },
+    {
+      id: "result-solo-401k",
+      title: "Solo 401(k): Maximize Retirement Savings and Reduce Taxes",
+      content: "A **Solo 401(k)** is a retirement plan designed for **self-employed individuals or business owners with no employees** (other than a spouse). It allows you to save for retirement while reducing **current taxable income**.\n\n**IRS References:**\n\n• **IRC §401(k)** — Qualified retirement plans.\n• **IRS Publication 560** — Retirement Plans for Small Business (SEP, SIMPLE, and Qualified Plans).\n\n**Why a Solo 401(k) Is Powerful**\n\n1. **Higher contribution limits** than traditional IRAs or SEP IRAs.\n2. **Dual contribution structure:**\n   - **Employee contribution:** Up to $22,500 in 2024 ($30,000 if age 50+).\n   - **Employer contribution:** Up to 25% of compensation.\n3. **Tax benefits:** Contributions reduce **current taxable income**.\n4. Can also offer **Roth contributions** (if desired (after-tax, grows tax-free).\n\n**Eligibility**\n\n✓ Must be **self-employed** or own a small business **with no employees** other than a spouse.\n✓ **You or your spouse** can participate (both earn income from the business).\n\n**How Contributions Work**\n\n1. **Employee Portion:** You contribute as an individual, up to $22,500 ($30,000 if 50+).\n2. **Employer Portion:** Your business contributes up to 25% of your compensation, or 20% of net self-employment income if you're a sole proprietor.\n3. **Total Contribution Limit:** $66,000 in 2024 ($73,500 if 50+) combining both employee and employer portions.\n\n**This is significantly higher than what most other retirement plans allow, making it ideal for high-income business owners.**\n\n**Steps to Implement a Solo 401(k)**\n\n✓ **Step 1: Establish the plan**\n  - Set up a Solo 401(k) with a financial institution or plan provider.\n  - Choose whether to allow Roth contributions.\n\n✓ **Step 2: Determine your contribution**\n  - Calculate both employee and employer contributions based on business profits.\n\n✓ **Step 3: Make contributions before tax deadlines**\n  - **Employee contributions** by December 31.\n  - **Employer contributions** can often be made by the business tax filing date (including extensions).\n\n✓ **Step 4: Track and document contributions**\n  - Keep records for tax reporting and future withdrawals.\n\n**Example**\n\n• Business profit: $100,000\n• Employee contribution (under 50): $22,500\n• Employer contribution: 25% of $100,000 = $25,000\n• **Total contribution = $47,500**\n\n**Tax benefit:** Reduces taxable income from $100,000 to **$52,500**, saving thousands in taxes.\n\n**Key Takeaways**\n\n✓ Allows **high retirement contributions** with significant tax savings.\n✓ Employer portion can be contributed **up to the tax filing deadline**.\n✓ **Roth option** available for after-tax contributions.\n✓ Ideal for **self-employed owners with no full-time employees**.\n✗ Not available if you have employees other than a spouse (then consider SEP IRA or other plans).\n\n**Bottom line:** A Solo 401(k) is a powerful tool for self-employed business owners to **save for retirement and lower current taxes**, especially if your income is high. Proper setup and contribution planning can maximize benefits under **IRC §401(k)**.",
+      conditions: [
+        {
+          questionId: "q12-retirement-plans",
+          operator: "equals",
+          value: "yes",
+          subConditions: [
+            {
+              questionId: "q12-solo-401k",
               operator: "equals",
               value: "yes"
             }
