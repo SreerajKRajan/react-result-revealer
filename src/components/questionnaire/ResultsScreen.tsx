@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle2, ArrowLeft, Download } from 'lucide-react';
 import { ResultStatement } from '@/types/questionnaire';
 import { useRef } from 'react';
+import html2pdf from 'html2pdf.js';
 
 interface ResultsScreenProps {
   results: ResultStatement[];
@@ -20,7 +21,17 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
   const printRef = useRef<HTMLDivElement>(null);
 
   const handleDownloadPDF = () => {
-    window.print();
+    if (printRef.current) {
+      const options = {
+        margin: 10,
+        filename: 'ATG-Tax-Planning-Results.pdf',
+        image: { type: 'jpeg' as const, quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+      };
+      
+      html2pdf().set(options).from(printRef.current).save();
+    }
   };
 
   return (
