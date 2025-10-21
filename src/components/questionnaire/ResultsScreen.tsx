@@ -4,6 +4,8 @@ import { CheckCircle2, ArrowLeft, Download } from 'lucide-react';
 import { ResultStatement } from '@/types/questionnaire';
 import { useRef } from 'react';
 import html2pdf from 'html2pdf.js';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface ResultsScreenProps {
   results: ResultStatement[];
@@ -20,17 +22,44 @@ interface ResultsScreenProps {
 export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreenProps) => {
   const printRef = useRef<HTMLDivElement>(null);
 
-  const handleDownloadPDF = () => {
-    if (printRef.current) {
-      const options = {
-        margin: 10,
-        filename: 'ATG-Tax-Planning-Results.pdf',
-        image: { type: 'jpeg' as const, quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
-      };
-      
-      html2pdf().set(options).from(printRef.current).save();
+  const handleDownloadPDF = async () => {
+    if (!printRef.current) return;
+  
+    const element = printRef.current;
+    
+    // Hide buttons and background gradients before capture
+    const buttons = element.querySelectorAll('.no-print');
+    buttons.forEach(btn => (btn as HTMLElement).style.display = 'none');
+    
+    // Temporarily remove background gradient for cleaner PDF
+    const container = element.closest('.min-h-screen') as HTMLElement;
+    const originalBg = container?.style.background || '';
+    if (container) container.style.background = '#ffffff';
+  
+    const opt: any = {
+      margin: [10, 10, 10, 10],
+      filename: 'ATG-Tax-Planning-Results.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 4,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        scrollY: -window.scrollY,
+        windowWidth: 1200,
+        letterRendering: true,
+        dpi: 300,
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+    };
+  
+    try {
+      await html2pdf().set(opt).from(element).save();
+    } finally {
+      // Restore buttons and background
+      buttons.forEach(btn => (btn as HTMLElement).style.display = '');
+      if (container) container.style.background = originalBg;
     }
   };
 

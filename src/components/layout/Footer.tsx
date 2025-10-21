@@ -7,7 +7,9 @@ export const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             {/* <img src={atgLogoFooter} alt="ATG - Advanced Tax Group" className="h-20 w-auto" /> */}
-            <img src="src/assets/ATG_logo_white_footer.svg" alt="ATG - Advanced Tax Group" className="h-16 w-auto" />
+            {/* <img src="src/assets/ATG_logo_white_footer.svg" alt="ATG - Advanced Tax Group" className="h-16 w-auto" /> */}
+                        <img src="https://storage.googleapis.com/msgsndr/3zdgsEJTjNPONjCuEzbx/media/6862f3514559e4d70eb5e20a.svg" alt="ATG - Advanced Tax Group" className="h-16 w-auto" />
+
 
           </div>
           <div className="text-center md:text-right">
