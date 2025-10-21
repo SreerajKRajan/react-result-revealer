@@ -1,11 +1,7 @@
-import { useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, ArrowLeft, Download } from 'lucide-react';
+import { CheckCircle2, ArrowLeft } from 'lucide-react';
 import { ResultStatement } from '@/types/questionnaire';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { useToast } from '@/hooks/use-toast';
 
 interface ResultsScreenProps {
   results: ResultStatement[];
@@ -20,87 +16,9 @@ interface ResultsScreenProps {
 }
 
 export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreenProps) => {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
-
-  const handleDownloadPDF = async () => {
-    if (!contentRef.current) return;
-
-    try {
-      toast({
-        title: "Generating PDF...",
-        description: "Please wait while we prepare your results.",
-      });
-
-      // Hide buttons during PDF generation
-      const buttonsContainer = document.getElementById('results-actions');
-      if (buttonsContainer) {
-        buttonsContainer.style.display = 'none';
-      }
-
-      const canvas = await html2canvas(contentRef.current, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-      });
-
-      // Show buttons again
-      if (buttonsContainer) {
-        buttonsContainer.style.display = 'flex';
-      }
-
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 0;
-
-      // Calculate how many pages we need
-      const pageHeight = imgHeight * ratio;
-      let heightLeft = pageHeight;
-      let position = 0;
-
-      // Add first page
-      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-      heightLeft -= pdfHeight;
-
-      // Add additional pages if needed
-      while (heightLeft > 0) {
-        position = heightLeft - pageHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', imgX, position, imgWidth * ratio, imgHeight * ratio);
-        heightLeft -= pdfHeight;
-      }
-
-      pdf.save('ATG-Tax-Planning-Results.pdf');
-
-      toast({
-        title: "PDF Downloaded",
-        description: "Your tax planning results have been saved.",
-      });
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      toast({
-        title: "Error",
-        description: "Failed to generate PDF. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12">
-      <div ref={contentRef} className="max-w-6xl mx-auto space-y-8 animate-fade-in">
+      <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
         {/* Header */}
         <Card className="p-8 md:p-12">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
@@ -223,7 +141,7 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
         )}
 
         {/* Actions */}
-        <div id="results-actions" className="flex gap-4 justify-center pt-4">
+        <div className="flex gap-4 justify-center pt-4">
           <Button
             variant="outline"
             onClick={onReview}
@@ -231,13 +149,6 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
           >
             <ArrowLeft className="w-4 h-4" />
             Review Answers
-          </Button>
-          <Button
-            onClick={handleDownloadPDF}
-            className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
-          >
-            <Download className="w-4 h-4" />
-            Download PDF
           </Button>
         </div>
       </div>
