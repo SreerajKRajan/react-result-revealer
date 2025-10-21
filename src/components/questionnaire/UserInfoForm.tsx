@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
 
 const userInfoSchema = z.object({
   name: z.string().trim().min(2, { message: "Name must be at least 2 characters" }).max(100, { message: "Name must be less than 100 characters" }),
@@ -20,6 +22,9 @@ interface UserInfoFormProps {
 }
 
 export const UserInfoForm = ({ onSubmit }: UserInfoFormProps) => {
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  
   const form = useForm<UserInfo>({
     resolver: zodResolver(userInfoSchema),
     defaultValues: {
@@ -28,6 +33,45 @@ export const UserInfoForm = ({ onSubmit }: UserInfoFormProps) => {
       phone: '',
     },
   });
+
+  const handleFormSubmit = async (data: UserInfo) => {
+    setIsLoading(true);
+    
+    try {
+      const baseUri = import.meta.env.VITE_BASE_URI || 'http://localhost:8000';
+      const response = await fetch(`${baseUri}/api/questionnaire/create-or-update-contact/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: data.email,
+          username: data.name,
+          phone: data.phone,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit contact information');
+      }
+
+      toast({
+        title: "Success",
+        description: "Your information has been saved successfully.",
+      });
+
+      onSubmit(data);
+    } catch (error) {
+      console.error('Error submitting contact information:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save your information. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-secondary/20">
@@ -43,7 +87,7 @@ export const UserInfoForm = ({ onSubmit }: UserInfoFormProps) => {
           </div>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="name"
@@ -91,8 +135,9 @@ export const UserInfoForm = ({ onSubmit }: UserInfoFormProps) => {
                   type="submit"
                   size="lg"
                   className="w-full md:w-auto md:px-12"
+                  disabled={isLoading}
                 >
-                  Continue to Questionnaire
+                  {isLoading ? "Saving..." : "Continue to Questionnaire"}
                 </Button>
               </div>
             </form>
