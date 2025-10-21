@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { UserInfoForm, UserInfo } from '@/components/questionnaire/UserInfoForm';
 import { WelcomeScreen } from '@/components/questionnaire/WelcomeScreen';
 import { QuestionRenderer } from '@/components/questionnaire/QuestionRenderer';
 import { ProgressBar } from '@/components/questionnaire/ProgressBar';
@@ -12,10 +13,11 @@ import { Answers } from '@/types/questionnaire';
 import { questionnaireData } from '@/data/questionnaireData';
 import { evaluateResults } from '@/utils/resultEvaluator';
 
-type Screen = 'welcome' | 'questionnaire' | 'results';
+type Screen = 'userInfo' | 'welcome' | 'questionnaire' | 'results';
 
 const Index = () => {
-  const [screen, setScreen] = useState<Screen>('welcome');
+  const [screen, setScreen] = useState<Screen>('userInfo');
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
 
@@ -47,6 +49,11 @@ const Index = () => {
     }
   };
 
+  const handleUserInfoSubmit = (data: UserInfo) => {
+    setUserInfo(data);
+    setScreen('welcome');
+  };
+
   const handleStart = () => {
     setScreen('questionnaire');
   };
@@ -76,6 +83,16 @@ const Index = () => {
     const visibleQuestions = getVisibleQuestions();
     return visibleQuestions.some((q) => answers[q.id] !== undefined);
   };
+
+  if (screen === 'userInfo') {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <UserInfoForm onSubmit={handleUserInfoSubmit} />
+        <Footer />
+      </div>
+    );
+  }
 
   if (screen === 'welcome') {
     return (
