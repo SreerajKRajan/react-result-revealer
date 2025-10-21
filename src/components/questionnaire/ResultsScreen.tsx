@@ -20,209 +20,47 @@ interface ResultsScreenProps {
 export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreenProps) => {
   const printRef = useRef<HTMLDivElement>(null);
 
-  const handleDownloadPDF = async () => {
+  const handleDownloadPDF = () => {
     if (printRef.current) {
-      // Temporarily make the content visible for better rendering
-      const element = printRef.current;
-      const originalPosition = element.style.position;
-      const originalLeft = element.style.left;
-      
-      element.style.position = 'fixed';
-      element.style.left = '0';
-      element.style.top = '0';
-      element.style.zIndex = '9999';
-      
       const options = {
-        margin: [15, 15, 15, 15] as [number, number, number, number],
+        margin: 10,
         filename: 'ATG-Tax-Planning-Results.pdf',
-        image: { type: 'jpeg' as const, quality: 1.0 },
-        html2canvas: { 
-          scale: 3,
-          useCORS: true,
-          logging: false,
-          letterRendering: true,
-          backgroundColor: '#ffffff'
-        },
-        jsPDF: { 
-          unit: 'mm' as const, 
-          format: 'a4' as const, 
-          orientation: 'portrait' as const,
-          compress: false
-        },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        image: { type: 'jpeg' as const, quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
       };
       
-      try {
-        await html2pdf().set(options).from(element).save();
-      } finally {
-        // Restore original position
-        element.style.position = originalPosition;
-        element.style.left = originalLeft;
-        element.style.zIndex = '';
-      }
+      html2pdf().set(options).from(printRef.current).save();
     }
   };
 
   return (
     <>
       <style>{`
-        .pdf-content {
-          background: #ffffff;
-          color: #000000;
-          font-family: 'Arial', 'Helvetica', sans-serif;
-          line-height: 1.8;
-          padding: 40px;
-          width: 210mm;
-          min-height: 297mm;
-        }
-        .pdf-header {
-          text-align: center;
-          margin-bottom: 40px;
-          padding-bottom: 20px;
-          border-bottom: 4px solid #0066cc;
-        }
-        .pdf-title {
-          font-size: 32px;
-          font-weight: 700;
-          color: #0066cc;
-          margin-bottom: 10px;
-          letter-spacing: 0.5px;
-        }
-        .pdf-section {
-          margin-bottom: 35px;
-          page-break-inside: avoid;
-        }
-        .pdf-section-title {
-          font-size: 22px;
-          font-weight: 700;
-          color: #0066cc;
-          margin-bottom: 18px;
-          padding-bottom: 10px;
-          border-bottom: 3px solid #0066cc;
-        }
-        .pdf-text {
-          font-size: 13px;
-          color: #000000;
-          margin-bottom: 14px;
-          line-height: 1.8;
-        }
-        .pdf-list {
-          margin: 18px 0;
-          padding-left: 25px;
-        }
-        .pdf-list-item {
-          margin-bottom: 10px;
-          font-size: 13px;
-          color: #000000;
-          line-height: 1.7;
-        }
-        .pdf-strategy {
-          background: #f5f5f5;
-          padding: 25px;
-          margin-bottom: 25px;
-          border-left: 5px solid #0066cc;
-          page-break-inside: avoid;
-        }
-        .pdf-strategy-title {
-          font-size: 18px;
-          font-weight: 700;
-          color: #0066cc;
-          margin-bottom: 15px;
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #printable-content, #printable-content * {
+            visibility: visible;
+          }
+          #printable-content {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+          }
+          .no-print {
+            display: none !important;
+          }
+          .print-break {
+            page-break-after: always;
+          }
         }
       `}</style>
       
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12">
-        {/* Hidden PDF Content */}
-        <div style={{ position: 'absolute', left: '-9999px' }} ref={printRef}>
-          <div className="pdf-content">
-            <div className="pdf-header">
-              <div className="pdf-title">ATG – Advanced Tax Group</div>
-              <div className="pdf-title">Tax Planning Results</div>
-            </div>
-
-            <div className="pdf-section">
-              <div className="pdf-section-title">{thankYouData.title}</div>
-              <div className="pdf-text">{thankYouData.introduction}</div>
-              
-              <div className="pdf-text" style={{ fontWeight: 'bold', marginTop: '20px' }}>
-                The results of this questionnaire are important because they:
-              </div>
-              <ul className="pdf-list">
-                {thankYouData.benefits.map((benefit, index) => (
-                  <li key={index} className="pdf-list-item">✓ {benefit}</li>
-                ))}
-              </ul>
-
-              <div className="pdf-text" style={{ marginTop: '20px' }}>
-                At <strong>ATG – Advanced Tax Group</strong>, we use these results to provide guidance and recommendations. While we offer professional insight, remember that <strong>you are ultimately responsible for implementing any strategies</strong>. Proper documentation, timing, and adherence to IRS rules are essential to fully realize the benefits of these planning strategies.
-              </div>
-
-              <div className="pdf-text">
-                By carefully reviewing your results and acting on the opportunities identified, you are taking a critical step toward:
-              </div>
-
-              <ul className="pdf-list">
-                {thankYouData.goals.map((goal, index) => (
-                  <li key={index} className="pdf-list-item">{goal}</li>
-                ))}
-              </ul>
-
-              <div className="pdf-text" style={{ fontWeight: 'bold', marginTop: '15px' }}>
-                {thankYouData.closingStatement}
-              </div>
-            </div>
-
-            {results.length > 0 && (
-              <div className="pdf-section">
-                <div className="pdf-section-title">Your Personalized Strategies</div>
-                
-                {results.map((result) => (
-                  <div key={result.id} className="pdf-strategy">
-                    <div className="pdf-strategy-title">{result.title}</div>
-                    {result.content.split('\n\n').map((paragraph, idx) => {
-                      if (paragraph.includes('•') || paragraph.includes('✓') || paragraph.includes('✗') || paragraph.includes('□')) {
-                        const lines = paragraph.split('\n');
-                        return (
-                          <ul key={idx} className="pdf-list" style={{ marginTop: '10px' }}>
-                            {lines.map((line, lineIdx) => {
-                              if (line.trim()) {
-                                const cleanLine = line.replace(/^[•✓✗□]\s*/, '');
-                                const icon = line.match(/^([•✓✗□])/)?.[1] || '•';
-                                return (
-                                  <li key={lineIdx} className="pdf-list-item">
-                                    {icon} {cleanLine}
-                                  </li>
-                                );
-                              }
-                              return null;
-                            })}
-                          </ul>
-                        );
-                      }
-                      
-                      if (paragraph.match(/^[A-Z][^.!?]*$/m) && paragraph.length < 100) {
-                        return (
-                          <div key={idx} className="pdf-text" style={{ fontWeight: 'bold', marginTop: '15px' }}>
-                            {paragraph}
-                          </div>
-                        );
-                      }
-                      
-                      return (
-                        <div key={idx} className="pdf-text">
-                          {paragraph}
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Visible Web Content */}
-        <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
+        <div className="max-w-6xl mx-auto space-y-8 animate-fade-in" id="printable-content" ref={printRef}>
           {/* Header */}
           <Card className="p-8 md:p-12">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
