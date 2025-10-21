@@ -20,17 +20,46 @@ interface ResultsScreenProps {
 export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreenProps) => {
   const printRef = useRef<HTMLDivElement>(null);
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
     if (printRef.current) {
+      // Temporarily make the content visible for better rendering
+      const element = printRef.current;
+      const originalPosition = element.style.position;
+      const originalLeft = element.style.left;
+      
+      element.style.position = 'fixed';
+      element.style.left = '0';
+      element.style.top = '0';
+      element.style.zIndex = '9999';
+      
       const options = {
-        margin: 10,
+        margin: [15, 15, 15, 15] as [number, number, number, number],
         filename: 'ATG-Tax-Planning-Results.pdf',
-        image: { type: 'jpeg' as const, quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+        image: { type: 'jpeg' as const, quality: 1.0 },
+        html2canvas: { 
+          scale: 3,
+          useCORS: true,
+          logging: false,
+          letterRendering: true,
+          backgroundColor: '#ffffff'
+        },
+        jsPDF: { 
+          unit: 'mm' as const, 
+          format: 'a4' as const, 
+          orientation: 'portrait' as const,
+          compress: false
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       };
       
-      html2pdf().set(options).from(printRef.current).save();
+      try {
+        await html2pdf().set(options).from(element).save();
+      } finally {
+        // Restore original position
+        element.style.position = originalPosition;
+        element.style.left = originalLeft;
+        element.style.zIndex = '';
+      }
     }
   };
 
@@ -38,62 +67,67 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
     <>
       <style>{`
         .pdf-content {
-          background: white;
-          color: #1a1a1a;
-          font-family: 'Arial', sans-serif;
-          line-height: 1.6;
+          background: #ffffff;
+          color: #000000;
+          font-family: 'Arial', 'Helvetica', sans-serif;
+          line-height: 1.8;
           padding: 40px;
+          width: 210mm;
+          min-height: 297mm;
         }
         .pdf-header {
           text-align: center;
           margin-bottom: 40px;
           padding-bottom: 20px;
-          border-bottom: 3px solid #0066cc;
+          border-bottom: 4px solid #0066cc;
         }
         .pdf-title {
-          font-size: 28px;
-          font-weight: bold;
+          font-size: 32px;
+          font-weight: 700;
           color: #0066cc;
           margin-bottom: 10px;
+          letter-spacing: 0.5px;
         }
         .pdf-section {
-          margin-bottom: 30px;
+          margin-bottom: 35px;
           page-break-inside: avoid;
         }
         .pdf-section-title {
-          font-size: 20px;
-          font-weight: bold;
+          font-size: 22px;
+          font-weight: 700;
           color: #0066cc;
-          margin-bottom: 15px;
-          padding-bottom: 8px;
-          border-bottom: 2px solid #e0e0e0;
+          margin-bottom: 18px;
+          padding-bottom: 10px;
+          border-bottom: 3px solid #0066cc;
         }
         .pdf-text {
-          font-size: 12px;
-          color: #333;
-          margin-bottom: 12px;
+          font-size: 13px;
+          color: #000000;
+          margin-bottom: 14px;
+          line-height: 1.8;
         }
         .pdf-list {
-          margin: 15px 0;
-          padding-left: 20px;
+          margin: 18px 0;
+          padding-left: 25px;
         }
         .pdf-list-item {
-          margin-bottom: 8px;
-          font-size: 12px;
-          color: #333;
+          margin-bottom: 10px;
+          font-size: 13px;
+          color: #000000;
+          line-height: 1.7;
         }
         .pdf-strategy {
-          background: #f8f9fa;
-          padding: 20px;
-          margin-bottom: 20px;
-          border-left: 4px solid #0066cc;
+          background: #f5f5f5;
+          padding: 25px;
+          margin-bottom: 25px;
+          border-left: 5px solid #0066cc;
           page-break-inside: avoid;
         }
         .pdf-strategy-title {
-          font-size: 16px;
-          font-weight: bold;
+          font-size: 18px;
+          font-weight: 700;
           color: #0066cc;
-          margin-bottom: 12px;
+          margin-bottom: 15px;
         }
       `}</style>
       
