@@ -37,30 +37,158 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
   return (
     <>
       <style>{`
-        @media print {
-          body * {
-            visibility: hidden;
-          }
-          #printable-content, #printable-content * {
-            visibility: visible;
-          }
-          #printable-content {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-          }
-          .no-print {
-            display: none !important;
-          }
-          .print-break {
-            page-break-after: always;
-          }
+        .pdf-content {
+          background: white;
+          color: #1a1a1a;
+          font-family: 'Arial', sans-serif;
+          line-height: 1.6;
+          padding: 40px;
+        }
+        .pdf-header {
+          text-align: center;
+          margin-bottom: 40px;
+          padding-bottom: 20px;
+          border-bottom: 3px solid #0066cc;
+        }
+        .pdf-title {
+          font-size: 28px;
+          font-weight: bold;
+          color: #0066cc;
+          margin-bottom: 10px;
+        }
+        .pdf-section {
+          margin-bottom: 30px;
+          page-break-inside: avoid;
+        }
+        .pdf-section-title {
+          font-size: 20px;
+          font-weight: bold;
+          color: #0066cc;
+          margin-bottom: 15px;
+          padding-bottom: 8px;
+          border-bottom: 2px solid #e0e0e0;
+        }
+        .pdf-text {
+          font-size: 12px;
+          color: #333;
+          margin-bottom: 12px;
+        }
+        .pdf-list {
+          margin: 15px 0;
+          padding-left: 20px;
+        }
+        .pdf-list-item {
+          margin-bottom: 8px;
+          font-size: 12px;
+          color: #333;
+        }
+        .pdf-strategy {
+          background: #f8f9fa;
+          padding: 20px;
+          margin-bottom: 20px;
+          border-left: 4px solid #0066cc;
+          page-break-inside: avoid;
+        }
+        .pdf-strategy-title {
+          font-size: 16px;
+          font-weight: bold;
+          color: #0066cc;
+          margin-bottom: 12px;
         }
       `}</style>
       
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12">
-        <div className="max-w-6xl mx-auto space-y-8 animate-fade-in" id="printable-content" ref={printRef}>
+        {/* Hidden PDF Content */}
+        <div style={{ position: 'absolute', left: '-9999px' }} ref={printRef}>
+          <div className="pdf-content">
+            <div className="pdf-header">
+              <div className="pdf-title">ATG – Advanced Tax Group</div>
+              <div className="pdf-title">Tax Planning Results</div>
+            </div>
+
+            <div className="pdf-section">
+              <div className="pdf-section-title">{thankYouData.title}</div>
+              <div className="pdf-text">{thankYouData.introduction}</div>
+              
+              <div className="pdf-text" style={{ fontWeight: 'bold', marginTop: '20px' }}>
+                The results of this questionnaire are important because they:
+              </div>
+              <ul className="pdf-list">
+                {thankYouData.benefits.map((benefit, index) => (
+                  <li key={index} className="pdf-list-item">✓ {benefit}</li>
+                ))}
+              </ul>
+
+              <div className="pdf-text" style={{ marginTop: '20px' }}>
+                At <strong>ATG – Advanced Tax Group</strong>, we use these results to provide guidance and recommendations. While we offer professional insight, remember that <strong>you are ultimately responsible for implementing any strategies</strong>. Proper documentation, timing, and adherence to IRS rules are essential to fully realize the benefits of these planning strategies.
+              </div>
+
+              <div className="pdf-text">
+                By carefully reviewing your results and acting on the opportunities identified, you are taking a critical step toward:
+              </div>
+
+              <ul className="pdf-list">
+                {thankYouData.goals.map((goal, index) => (
+                  <li key={index} className="pdf-list-item">{goal}</li>
+                ))}
+              </ul>
+
+              <div className="pdf-text" style={{ fontWeight: 'bold', marginTop: '15px' }}>
+                {thankYouData.closingStatement}
+              </div>
+            </div>
+
+            {results.length > 0 && (
+              <div className="pdf-section">
+                <div className="pdf-section-title">Your Personalized Strategies</div>
+                
+                {results.map((result) => (
+                  <div key={result.id} className="pdf-strategy">
+                    <div className="pdf-strategy-title">{result.title}</div>
+                    {result.content.split('\n\n').map((paragraph, idx) => {
+                      if (paragraph.includes('•') || paragraph.includes('✓') || paragraph.includes('✗') || paragraph.includes('□')) {
+                        const lines = paragraph.split('\n');
+                        return (
+                          <ul key={idx} className="pdf-list" style={{ marginTop: '10px' }}>
+                            {lines.map((line, lineIdx) => {
+                              if (line.trim()) {
+                                const cleanLine = line.replace(/^[•✓✗□]\s*/, '');
+                                const icon = line.match(/^([•✓✗□])/)?.[1] || '•';
+                                return (
+                                  <li key={lineIdx} className="pdf-list-item">
+                                    {icon} {cleanLine}
+                                  </li>
+                                );
+                              }
+                              return null;
+                            })}
+                          </ul>
+                        );
+                      }
+                      
+                      if (paragraph.match(/^[A-Z][^.!?]*$/m) && paragraph.length < 100) {
+                        return (
+                          <div key={idx} className="pdf-text" style={{ fontWeight: 'bold', marginTop: '15px' }}>
+                            {paragraph}
+                          </div>
+                        );
+                      }
+                      
+                      return (
+                        <div key={idx} className="pdf-text">
+                          {paragraph}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Visible Web Content */}
+        <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
           {/* Header */}
           <Card className="p-8 md:p-12">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
