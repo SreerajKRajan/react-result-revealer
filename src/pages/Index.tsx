@@ -16,7 +16,7 @@ import { evaluateResults } from '@/utils/resultEvaluator';
 type Screen = 'userInfo' | 'welcome' | 'questionnaire' | 'results';
 
 const Index = () => {
-  const [screen, setScreen] = useState<Screen>('userInfo');
+  const [screen, setScreen] = useState<Screen>('welcome');
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
@@ -51,11 +51,11 @@ const Index = () => {
 
   const handleUserInfoSubmit = (data: UserInfo) => {
     setUserInfo(data);
-    setScreen('welcome');
+    setScreen('questionnaire');
   };
 
   const handleStart = () => {
-    setScreen('questionnaire');
+    setScreen('userInfo');
   };
 
   const handleReview = () => {
