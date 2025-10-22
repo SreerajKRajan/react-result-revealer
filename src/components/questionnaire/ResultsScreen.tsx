@@ -4,6 +4,8 @@ import { CheckCircle2, ArrowLeft, Download, Phone, Mail, Globe } from 'lucide-re
 import { ResultStatement } from '@/types/questionnaire';
 import { useRef } from 'react';
 import html2pdf from 'html2pdf.js';
+import { jsPDF } from 'jspdf';
+
 
 interface ResultsScreenProps {
   results: ResultStatement[];
