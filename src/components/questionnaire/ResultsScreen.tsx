@@ -1,11 +1,9 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, ArrowLeft, Download } from 'lucide-react';
+import { CheckCircle2, ArrowLeft, Download, Phone, Mail, Globe } from 'lucide-react';
 import { ResultStatement } from '@/types/questionnaire';
 import { useRef } from 'react';
 import html2pdf from 'html2pdf.js';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 interface ResultsScreenProps {
   results: ResultStatement[];
@@ -21,6 +19,52 @@ interface ResultsScreenProps {
 
 export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreenProps) => {
   const printRef = useRef<HTMLDivElement>(null);
+
+  // Function to parse text with bold and italic formatting
+  const parseFormattedText = (text: string) => {
+    const parts: JSX.Element[] = [];
+    let lastIndex = 0;
+    let key = 0;
+
+    // Match **bold** and *italic* patterns
+    const regex = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+      // Add text before the match
+      if (match.index > lastIndex) {
+        parts.push(
+          <span key={key++}>{text.substring(lastIndex, match.index)}</span>
+        );
+      }
+
+      const matched = match[0];
+      if (matched.startsWith('**') && matched.endsWith('**')) {
+        // Bold text
+        parts.push(
+          <strong key={key++} className="font-bold text-foreground">
+            {matched.slice(2, -2)}
+          </strong>
+        );
+      } else if (matched.startsWith('*') && matched.endsWith('*')) {
+        // Italic text
+        parts.push(
+          <em key={key++} className="italic">
+            {matched.slice(1, -1)}
+          </em>
+        );
+      }
+
+      lastIndex = regex.lastIndex;
+    }
+
+    // Add remaining text
+    if (lastIndex < text.length) {
+      parts.push(<span key={key++}>{text.substring(lastIndex)}</span>);
+    }
+
+    return parts.length > 0 ? parts : text;
+  };
 
   const handleDownloadPDF = async () => {
     if (!printRef.current) return;
@@ -88,7 +132,33 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
         }
       `}</style>
       
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12">
+      {/* Sticky Contact Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-primary text-primary-foreground shadow-lg z-50 no-print">
+        <div className="max-w-6xl mx-auto px-4 py-3">
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm">
+            <div className="flex items-center gap-2">
+              <Phone className="w-4 h-4" />
+              <a href="tel:+1234567890" className="hover:underline font-medium">
+                (123) 456-7890
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <Mail className="w-4 h-4" />
+              <a href="mailto:contact@atgtax.com" className="hover:underline font-medium">
+                contact@atgtax.com
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <Globe className="w-4 h-4" />
+              <a href="https://atgtax.com" target="_blank" rel="noopener noreferrer" className="hover:underline font-medium">
+                atgtax.com
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12 pb-24">
         <div className="max-w-6xl mx-auto space-y-8 animate-fade-in" id="printable-content" ref={printRef}>
           {/* Header */}
           <Card className="p-8 md:p-12">
@@ -97,43 +167,44 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
             </h1>
 
             <div className="space-y-4 text-foreground/90">
-              <p className="leading-relaxed">
-                {thankYouData.introduction}
+              <p className="leading-relaxed text-base">
+                {parseFormattedText(thankYouData.introduction)}
               </p>
 
               <div className="space-y-3 pt-4">
-                <p className="font-semibold text-foreground">
+                <p className="font-bold text-foreground text-lg">
                   The results of this questionnaire are important because they:
                 </p>
                 <ul className="space-y-2">
                   {thankYouData.benefits.map((benefit, index) => (
                     <li key={index} className="flex items-start gap-3">
                       <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span>{benefit}</span>
+                      <span className="text-base">{parseFormattedText(benefit)}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
               <div className="pt-4 space-y-3">
-                <p className="leading-relaxed">
-                  At <strong>ATG – Advanced Tax Group</strong>, we use these results to provide guidance and recommendations. While we offer professional insight, remember that <strong>you are ultimately responsible for implementing any strategies</strong>. Proper documentation, timing, and adherence to IRS rules are essential to fully realize the benefits of these planning strategies.
+                <p className="leading-relaxed text-base">
+                  At <strong className="font-bold">ATG – Advanced Tax Group</strong>, we use these results to provide guidance and recommendations. While we offer professional insight, remember that <strong className="font-bold">you are ultimately responsible for implementing any strategies</strong>. Proper documentation, timing, and adherence to IRS rules are essential to fully realize the benefits of these planning strategies.
                 </p>
 
-                <p className="leading-relaxed">
+                <p className="leading-relaxed text-base font-medium">
                   By carefully reviewing your results and acting on the opportunities identified, you are taking a critical step toward:
                 </p>
 
                 <ul className="space-y-2 pl-6">
                   {thankYouData.goals.map((goal, index) => (
-                    <li key={index} className="list-disc text-foreground/90">
-                      {goal}
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-primary font-bold">•</span>
+                      <span className="text-base italic">{parseFormattedText(goal)}</span>
                     </li>
                   ))}
                 </ul>
 
-                <p className="leading-relaxed pt-4 font-medium">
-                  {thankYouData.closingStatement}
+                <p className="leading-relaxed pt-4 font-bold text-foreground text-base">
+                  {parseFormattedText(thankYouData.closingStatement)}
                 </p>
               </div>
             </div>
@@ -149,38 +220,46 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
               {results.map((result, index) => (
                 <Card key={result.id} className="p-6 md:p-8">
                   <h3 className="text-xl font-bold text-primary mb-4">
-                    {result.title}
+                    {parseFormattedText(result.title)}
                   </h3>
                   <div className="prose prose-sm max-w-none">
                     {result.content.split('\n\n').map((paragraph, idx) => {
                       // Handle headings
                       if (paragraph.match(/^[A-Z][^.!?]*$/m) && paragraph.length < 100) {
                         return (
-                          <h4 key={idx} className="text-lg font-semibold text-foreground mt-6 mb-3">
-                            {paragraph}
+                          <h4 key={idx} className="text-lg font-bold text-foreground mt-6 mb-3">
+                            {parseFormattedText(paragraph)}
                           </h4>
                         );
                       }
                       
-                      // Handle bullet points
-                      if (paragraph.includes('•') || paragraph.includes('✓') || paragraph.includes('✗') || paragraph.includes('□')) {
+                      // Handle bullet points with better symbols
+                      if (paragraph.includes('•') || paragraph.includes('✓') || paragraph.includes('✗') || paragraph.includes('□') || paragraph.includes('-')) {
                         const lines = paragraph.split('\n');
                         return (
                           <ul key={idx} className="space-y-2 my-4">
                             {lines.map((line, lineIdx) => {
                               if (line.trim()) {
-                                const cleanLine = line.replace(/^[•✓✗□]\s*/, '');
-                                const icon = line.match(/^([•✓✗□])/)?.[1];
+                                const cleanLine = line.replace(/^[•✓✗□\-]\s*/, '');
+                                const icon = line.match(/^([•✓✗□\-])/)?.[1];
+                                
+                                let iconElement;
+                                let iconClass = 'flex-shrink-0';
+                                
+                                if (icon === '✓') {
+                                  iconElement = <CheckCircle2 className={`w-4 h-4 text-primary ${iconClass}`} />;
+                                } else if (icon === '✗') {
+                                  iconElement = <span className={`text-destructive font-bold ${iconClass}`}>✗</span>;
+                                } else {
+                                  iconElement = <span className={`text-primary font-bold ${iconClass}`}>•</span>;
+                                }
+                                
                                 return (
                                   <li key={lineIdx} className="flex items-start gap-2">
-                                    <span className={`flex-shrink-0 ${
-                                      icon === '✓' ? 'text-primary' : 
-                                      icon === '✗' ? 'text-destructive' : 
-                                      'text-foreground/60'
-                                    }`}>
-                                      {icon || '•'}
+                                    {iconElement}
+                                    <span className="text-foreground/90 text-base italic">
+                                      {parseFormattedText(cleanLine)}
                                     </span>
-                                    <span className="text-foreground/90">{cleanLine}</span>
                                   </li>
                                 );
                               }
@@ -192,8 +271,8 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
                       
                       // Regular paragraphs
                       return (
-                        <p key={idx} className="text-foreground/90 leading-relaxed my-4">
-                          {paragraph}
+                        <p key={idx} className="text-foreground/90 leading-relaxed my-4 text-base">
+                          {parseFormattedText(paragraph)}
                         </p>
                       );
                     })}
