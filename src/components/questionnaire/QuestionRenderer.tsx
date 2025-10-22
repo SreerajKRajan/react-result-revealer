@@ -80,7 +80,7 @@ export const QuestionRenderer = ({ question, answer, onAnswer, allAnswers }: Que
               type="number"
               value={answer || ''}
               onChange={(e) => onAnswer(question.id, Number(e.target.value))}
-              placeholder="Enter amount"
+              placeholder="Enter Value"
               min={question.validation?.min}
               max={question.validation?.max}
               className="text-lg"

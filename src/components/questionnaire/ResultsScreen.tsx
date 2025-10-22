@@ -66,45 +66,175 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
     return parts.length > 0 ? parts : text;
   };
 
-  const handleDownloadPDF = async () => {
-    if (!printRef.current) return;
-  
-    const element = printRef.current;
-    
-    // Hide buttons and background gradients before capture
-    const buttons = element.querySelectorAll('.no-print');
-    buttons.forEach(btn => (btn as HTMLElement).style.display = 'none');
-    
-    // Temporarily remove background gradient for cleaner PDF
-    const container = element.closest('.min-h-screen') as HTMLElement;
-    const originalBg = container?.style.background || '';
-    if (container) container.style.background = '#ffffff';
-  
-    const opt: any = {
-      margin: [10, 10, 10, 10],
-      filename: 'ATG-Tax-Planning-Results.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: {
-        scale: 4,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-        scrollY: -window.scrollY,
-        windowWidth: 1200,
-        letterRendering: true,
-        dpi: 300,
-      },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+  const handleDownloadPDF = () => {
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 20;
+    const maxWidth = pageWidth - (margin * 2);
+    let yPosition = margin;
+
+    // Helper function to add text with word wrap
+    const addText = (text: string, fontSize: number, isBold: boolean = false, color: string = '#000000', indent: number = 0) => {
+      pdf.setFontSize(fontSize);
+      pdf.setFont('helvetica', isBold ? 'bold' : 'normal');
+      
+      // Convert hex color to RGB
+      const r = parseInt(color.slice(1, 3), 16);
+      const g = parseInt(color.slice(3, 5), 16);
+      const b = parseInt(color.slice(5, 7), 16);
+      pdf.setTextColor(r, g, b);
+
+      const lines = pdf.splitTextToSize(text, maxWidth - indent);
+      const lineHeight = fontSize * 0.4;
+      
+      lines.forEach((line: string, index: number) => {
+        if (yPosition + lineHeight > pageHeight - margin) {
+          pdf.addPage();
+          yPosition = margin;
+        }
+        pdf.text(line, margin + indent, yPosition);
+        yPosition += lineHeight;
+      });
+      
+      yPosition += 2;
     };
-  
-    try {
-      await html2pdf().set(opt).from(element).save();
-    } finally {
-      // Restore buttons and background
-      buttons.forEach(btn => (btn as HTMLElement).style.display = '');
-      if (container) container.style.background = originalBg;
+
+    // Helper for bullet points with symbols
+    const addBulletPoint = (text: string, symbol: '✓' | '✗' | '•', fontSize: number = 11) => {
+      const symbolColor = symbol === '✓' ? '#2563eb' : symbol === '✗' ? '#dc2626' : '#000000';
+      
+      // Add the symbol
+      pdf.setFontSize(fontSize);
+      pdf.setTextColor(symbolColor === '#2563eb' ? 37 : symbolColor === '#dc2626' ? 220 : 0, 
+                       symbolColor === '#2563eb' ? 99 : symbolColor === '#dc2626' ? 38 : 0, 
+                       symbolColor === '#2563eb' ? 235 : symbolColor === '#dc2626' ? 38 : 0);
+      
+      if (yPosition + fontSize * 0.4 > pageHeight - margin) {
+        pdf.addPage();
+        yPosition = margin;
+      }
+      
+      pdf.text(symbol, margin, yPosition);
+      
+      // Add the text with indent
+      pdf.setTextColor(0, 0, 0);
+      const lines = pdf.splitTextToSize(text, maxWidth - 8);
+      const lineHeight = fontSize * 0.4;
+      
+      lines.forEach((line: string, index: number) => {
+        if (index > 0 && yPosition + lineHeight > pageHeight - margin) {
+          pdf.addPage();
+          yPosition = margin;
+        }
+        pdf.text(line, margin + 8, yPosition);
+        if (index < lines.length - 1) {
+          yPosition += lineHeight;
+        }
+      });
+      
+      yPosition += lineHeight + 2;
+    };
+
+    // Add spacing
+    const addSpace = (space: number = 5) => {
+      yPosition += space;
+    };
+
+    // Title
+    addText(thankYouData.title, 18, true);
+    addSpace(5);
+
+    // Introduction
+    addText(thankYouData.introduction, 11);
+    addSpace(5);
+
+    // Benefits section
+    addText('The results of this questionnaire are important because they:', 11, true);
+    addSpace(3);
+
+    thankYouData.benefits.forEach((benefit) => {
+      addBulletPoint(benefit, '✓', 11);
+    });
+    addSpace(5);
+
+    // ATG Section
+    addText('At ATG – Advanced Tax Group, we use these results to provide guidance and recommendations. While we offer professional insight, remember that you are ultimately responsible for implementing any strategies. Proper documentation, timing, and adherence to IRS rules are essential to fully realize the benefits of these planning strategies.', 11);
+    addSpace(5);
+
+    addText('By carefully reviewing your results and acting on the opportunities identified, you are taking a critical step toward:', 11);
+    addSpace(3);
+
+    thankYouData.goals.forEach((goal) => {
+      addBulletPoint(goal, '•', 11);
+    });
+    addSpace(5);
+
+    addText(thankYouData.closingStatement, 11, true);
+    addSpace(10);
+
+    // Results
+    if (results.length > 0) {
+      addText('Your Personalized Strategies', 16, true);
+      addSpace(8);
+
+      results.forEach((result, index) => {
+        // Result title
+        addText(result.title, 13, true, '#2563eb');
+        addSpace(4);
+
+        // Parse and format content
+        const paragraphs = result.content.split('\n\n');
+        
+        paragraphs.forEach((paragraph) => {
+          // Check if it's a heading
+          if (paragraph.match(/^[A-Z][^.!?]*$/m) && paragraph.length < 100) {
+            addSpace(3);
+            addText(paragraph, 12, true);
+            addSpace(2);
+          }
+          // Check if it's a bullet list
+          else if (paragraph.includes('•') || paragraph.includes('✓') || paragraph.includes('✗')) {
+            const lines = paragraph.split('\n');
+            lines.forEach((line) => {
+              if (line.trim()) {
+                const trimmedLine = line.trim();
+                if (trimmedLine.startsWith('✓')) {
+                  addBulletPoint(trimmedLine.substring(1).trim(), '✓', 11);
+                } else if (trimmedLine.startsWith('✗')) {
+                  addBulletPoint(trimmedLine.substring(1).trim(), '✗', 11);
+                } else if (trimmedLine.startsWith('•')) {
+                  addBulletPoint(trimmedLine.substring(1).trim(), '•', 11);
+                } else {
+                  addText(trimmedLine, 11);
+                }
+              }
+            });
+            addSpace(2);
+          }
+          // Regular paragraph
+          else {
+            addText(paragraph, 11);
+            addSpace(3);
+          }
+        });
+
+        // Add space between results
+        if (index < results.length - 1) {
+          addSpace(8);
+        }
+      });
+    } else {
+      addText('Based on your responses, we\'ll provide personalized recommendations during your consultation with ATG – Advanced Tax Group.', 11);
     }
+
+    // Save the PDF
+    pdf.save('ATG-Tax-Planning-Results.pdf');
   };
 
   return (
