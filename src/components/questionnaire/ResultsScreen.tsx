@@ -48,6 +48,8 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
       email: userInfo.email,
       phone: userInfo.phone,
     });
+
+    console.log("params: ", params.toString())
     
     return `https://api.leadconnectorhq.com/widget/booking/x4vi85Pz2LuLzmS5lGCd?${params.toString()}`;
   };
@@ -483,18 +485,19 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
 
       {/* Schedule Call Dialog */}
       <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
-        <DialogContent className="max-w-4xl h-[80vh] p-0">
-          <DialogHeader className="p-6 pb-0">
-            <DialogTitle>Schedule a Call with ATG</DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 w-full h-full p-6 pt-2">
-            <iframe
-              src={getBookingUrl()}
-              className="w-full h-full border-0 rounded-lg"
-              title="Schedule a Call"
-            />
-          </div>
-        </DialogContent>
+      <DialogContent className="max-w-6xl h-[80vh] p-0 flex flex-col">
+  <DialogHeader className="p-6 pb-0">
+    <DialogTitle>Schedule a Call with ATG</DialogTitle>
+  </DialogHeader>
+  
+  <div className="flex-1 p-6 pt-2">
+    <iframe
+      src={getBookingUrl()}
+      className="w-full h-full border-0 rounded-lg"
+      title="Schedule a Call"
+    />
+  </div>
+</DialogContent>
       </Dialog>
     </>
   );
