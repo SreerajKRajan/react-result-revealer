@@ -119,6 +119,7 @@ const Index = () => {
             results={results}
             thankYouData={questionnaireData.thankYou}
             onReview={handleReview}
+            userInfo={userInfo}
           />
         </main>
         <Footer />

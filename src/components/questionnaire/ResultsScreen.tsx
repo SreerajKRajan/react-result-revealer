@@ -1,10 +1,12 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, ArrowLeft, Download, Phone, Mail, Globe } from 'lucide-react';
+import { CheckCircle2, ArrowLeft, Download, Phone, Mail, Globe, Calendar } from 'lucide-react';
 import { ResultStatement } from '@/types/questionnaire';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import html2pdf from 'html2pdf.js';
 import { jsPDF } from 'jspdf';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { UserInfo } from './UserInfoForm';
 
 
 interface ResultsScreenProps {
@@ -17,10 +19,38 @@ interface ResultsScreenProps {
     closingStatement: string;
   };
   onReview: () => void;
+  userInfo: UserInfo | null;
 }
 
-export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreenProps) => {
+export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: ResultsScreenProps) => {
   const printRef = useRef<HTMLDivElement>(null);
+  const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
+
+  // Function to split full name into first and last name
+  const splitName = (fullName: string) => {
+    const parts = fullName.trim().split(' ');
+    if (parts.length === 1) {
+      return { firstName: parts[0], lastName: '' };
+    }
+    const firstName = parts[0];
+    const lastName = parts.slice(1).join(' ');
+    return { firstName, lastName };
+  };
+
+  // Construct booking URL with user info
+  const getBookingUrl = () => {
+    if (!userInfo) return '';
+    
+    const { firstName, lastName } = splitName(userInfo.name);
+    const params = new URLSearchParams({
+      first_name: firstName,
+      last_name: lastName,
+      email: userInfo.email,
+      phone: userInfo.phone,
+    });
+    
+    return `https://api.leadconnectorhq.com/widget/booking/x4vi85Pz2LuLzmS5lGCd?${params.toString()}`;
+  };
 
   // Function to parse text with bold and italic formatting
   const parseFormattedText = (text: string) => {
@@ -423,7 +453,7 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
           )}
 
           {/* Actions */}
-          <div className="flex gap-4 justify-center pt-4 no-print">
+          <div className="flex flex-wrap gap-4 justify-center pt-4 no-print">
             <Button
               variant="outline"
               onClick={onReview}
@@ -435,13 +465,37 @@ export const ResultsScreen = ({ results, thankYouData, onReview }: ResultsScreen
             <Button
               onClick={handleDownloadPDF}
               className="gap-2"
+              variant="outline"
             >
               <Download className="w-4 h-4" />
               Download PDF
             </Button>
+            <Button
+              onClick={() => setIsScheduleDialogOpen(true)}
+              className="gap-2"
+            >
+              <Calendar className="w-4 h-4" />
+              Schedule a Call
+            </Button>
           </div>
         </div>
       </div>
+
+      {/* Schedule Call Dialog */}
+      <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
+        <DialogContent className="max-w-4xl h-[80vh] p-0">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle>Schedule a Call with ATG</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 w-full h-full p-6 pt-2">
+            <iframe
+              src={getBookingUrl()}
+              className="w-full h-full border-0 rounded-lg"
+              title="Schedule a Call"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
