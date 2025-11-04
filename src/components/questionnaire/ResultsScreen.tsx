@@ -311,7 +311,7 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
         }
       `}</style>
       
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12 pb-48">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12 pb-8">
         <div className="max-w-6xl mx-auto space-y-8 animate-fade-in" id="printable-content" ref={printRef}>
           {/* Header */}
           <Card className="p-8 md:p-12">
@@ -444,7 +444,7 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
           )}
 
           {/* Disclaimer */}
-          <div className="mt-8 pt-6 border-t border-border/50 mb-8">
+          <div className="mt-8 pt-6 border-t border-border/50">
             <div className="max-w-4xl mx-auto px-4">
               <p className="text-sm text-muted-foreground leading-relaxed">
                 <strong className="font-semibold text-foreground">Important:</strong> The insights in this guide are meant to educate and inform — not to replace personalized advice. Before making any financial or tax decisions, be sure to review these strategies with your accountant or financial professional. If you&apos;re not currently working with ATG, our team would be happy to review your situation and help you get started.
@@ -452,12 +452,38 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
             </div>
           </div>
 
-          {/* Spacer for sticky buttons */}
+          {/* Contact Information Section */}
+          <div className="mt-8 bg-muted/30 rounded-lg p-6">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm">
+                <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-primary" />
+                  <a href="tel:8334140800" className="hover:underline font-medium text-foreground">
+                    833-414-0800
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-primary" />
+                  <a href="mailto:info@advancedtaxgroup.com" className="hover:underline font-medium text-foreground">
+                    info@advancedtaxgroup.com
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Globe className="w-4 h-4 text-primary" />
+                  <a href="https://advancedtaxgroup.com" target="_blank" rel="noopener noreferrer" className="hover:underline font-medium text-foreground">
+                    advancedtaxgroup.com
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Spacer for sticky buttons and footer */}
           <div className="h-32" />
         </div>
 
-        {/* Sticky Action Buttons - positioned above footer */}
-        <div className="sticky bottom-[88px] left-0 right-0 bg-background/95 backdrop-blur-sm border-y border-border shadow-lg z-40 no-print mb-0">
+        {/* Sticky Action Buttons */}
+        <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg z-40 no-print">
           <div className="max-w-6xl mx-auto px-4 py-4">
             <div className="flex flex-wrap gap-3 justify-center items-center">
               <Button
@@ -488,32 +514,6 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
                   Schedule a Call
                 </Button>
               )}
-            </div>
-          </div>
-        </div>
-
-        {/* Contact Footer - Fixed at bottom */}
-        <div className="fixed bottom-0 left-0 right-0 bg-primary text-primary-foreground shadow-lg z-50 no-print">
-          <div className="max-w-6xl mx-auto px-4 py-5">
-            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm">
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4" />
-                <a href="tel:8334140800" className="hover:underline font-medium">
-                  833-414-0800
-                </a>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4" />
-                <a href="mailto:info@advancedtaxgroup.com" className="hover:underline font-medium">
-                  info@advancedtaxgroup.com
-                </a>
-              </div>
-              <div className="flex items-center gap-2">
-                <Globe className="w-4 h-4" />
-                <a href="https://advancedtaxgroup.com" target="_blank" rel="noopener noreferrer" className="hover:underline font-medium">
-                  advancedtaxgroup.com
-                </a>
-              </div>
             </div>
           </div>
         </div>
