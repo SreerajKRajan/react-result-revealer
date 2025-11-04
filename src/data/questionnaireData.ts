@@ -83,10 +83,6 @@ export const questionnaireData: QuestionnaireData = {
           id: "q2-days-per-year",
           text: "If yes, how many days per year do you typically use your home for business-related events?",
           type: "numeric",
-          validation: {
-            min: 0,
-            max: 14
-          },
           conditionalOn: {
             questionId: "q2-business-meetings",
             value: "yes"
