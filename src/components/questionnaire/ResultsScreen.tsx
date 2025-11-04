@@ -29,7 +29,7 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
   const [searchParams] = useSearchParams();
   
   // Check if user is an existing user
-  const isExistingUser = searchParams.get('user') === 'existing';
+  const isExistingUser = searchParams.get('user') === 'existing-clients';
 
   // Function to split full name into first and last name
   const splitName = (fullName: string) => {
@@ -317,20 +317,20 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
           <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm">
             <div className="flex items-center gap-2">
               <Phone className="w-4 h-4" />
-              <a href="tel:+1234567890" className="hover:underline font-medium">
-                (123) 456-7890
+              <a href="tel:8334140800" className="hover:underline font-medium">
+                833-414-0800
               </a>
             </div>
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4" />
-              <a href="mailto:contact@atgtax.com" className="hover:underline font-medium">
-                contact@atgtax.com
+              <a href="mailto:info@advancedtaxgroup.com" className="hover:underline font-medium">
+                info@advancedtaxgroup.com
               </a>
             </div>
             <div className="flex items-center gap-2">
               <Globe className="w-4 h-4" />
-              <a href="https://atgtax.com" target="_blank" rel="noopener noreferrer" className="hover:underline font-medium">
-                atgtax.com
+              <a href="https://advancedtaxgroup.com" target="_blank" rel="noopener noreferrer" className="hover:underline font-medium">
+                advancedtaxgroup.com
               </a>
             </div>
           </div>
