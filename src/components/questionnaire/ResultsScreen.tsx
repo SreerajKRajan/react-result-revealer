@@ -478,34 +478,43 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex flex-wrap gap-4 justify-center pt-4 no-print">
-            <Button
-              variant="outline"
-              onClick={onReview}
-              className="gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Review Answers
-            </Button>
-            <Button
-              onClick={handleDownloadPDF}
-              className="gap-2"
-              variant="outline"
-            >
-              <Download className="w-4 h-4" />
-              Download PDF
-            </Button>
-            {!isExistingUser && (
+          {/* Spacer for sticky buttons */}
+          <div className="h-24" />
+        </div>
+
+        {/* Sticky Action Buttons */}
+        <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg z-40 no-print">
+          <div className="max-w-6xl mx-auto px-4 py-4">
+            <div className="flex flex-wrap gap-3 justify-center items-center">
               <Button
-                onClick={() => setIsScheduleDialogOpen(true)}
+                variant="outline"
+                onClick={onReview}
+                className="gap-2 hover:bg-accent transition-colors"
                 size="lg"
-                className="gap-3 text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 bg-gradient-to-r from-primary to-primary/90"
               >
-                <Calendar className="w-5 h-5" />
-                Schedule a Call
+                <ArrowLeft className="w-4 h-4" />
+                Review Answers
               </Button>
-            )}
+              <Button
+                onClick={handleDownloadPDF}
+                className="gap-2 hover:bg-accent transition-colors"
+                variant="outline"
+                size="lg"
+              >
+                <Download className="w-4 h-4" />
+                Download PDF
+              </Button>
+              {!isExistingUser && (
+                <Button
+                  onClick={() => setIsScheduleDialogOpen(true)}
+                  size="lg"
+                  className="gap-3 text-lg px-10 py-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-gradient-to-r from-primary via-primary to-primary/90 font-semibold"
+                >
+                  <Calendar className="w-5 h-5" />
+                  Schedule a Call
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>
