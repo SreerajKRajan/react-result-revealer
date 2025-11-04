@@ -272,6 +272,16 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
       addText('Based on your responses, we\'ll provide personalized recommendations during your consultation with ATG – Advanced Tax Group.', 11);
     }
 
+    // Add disclaimer
+    addSpace(10);
+    pdf.setDrawColor(200, 200, 200);
+    pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+    addSpace(5);
+    
+    addText('Important:', 10, true);
+    addSpace(2);
+    addText('The insights in this guide are meant to educate and inform — not to replace personalized advice. Before making any financial or tax decisions, be sure to review these strategies with your accountant or financial professional. If you\'re not currently working with ATG, our team would be happy to review your situation and help you get started.', 9, false, '#666666');
+
     // Save the PDF
     pdf.save('ATG-Tax-Planning-Results.pdf');
   };
@@ -458,6 +468,15 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
               </p>
             </Card>
           )}
+
+          {/* Disclaimer */}
+          <div className="mt-8 pt-6 border-t border-border/50">
+            <div className="max-w-4xl mx-auto px-4">
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                <strong className="font-semibold text-foreground">Important:</strong> The insights in this guide are meant to educate and inform — not to replace personalized advice. Before making any financial or tax decisions, be sure to review these strategies with your accountant or financial professional. If you're not currently working with ATG, our team would be happy to review your situation and help you get started.
+              </p>
+            </div>
+          </div>
 
           {/* Actions */}
           <div className="flex flex-wrap gap-4 justify-center pt-4 no-print">
