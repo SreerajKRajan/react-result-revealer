@@ -7,6 +7,7 @@ import html2pdf from 'html2pdf.js';
 import { jsPDF } from 'jspdf';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { UserInfo } from './UserInfoForm';
+import { useSearchParams } from 'react-router-dom';
 
 
 interface ResultsScreenProps {
@@ -25,6 +26,10 @@ interface ResultsScreenProps {
 export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: ResultsScreenProps) => {
   const printRef = useRef<HTMLDivElement>(null);
   const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+  
+  // Check if user is an existing user
+  const isExistingUser = searchParams.get('user') === 'existing';
 
   // Function to split full name into first and last name
   const splitName = (fullName: string) => {
@@ -472,13 +477,15 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
               <Download className="w-4 h-4" />
               Download PDF
             </Button>
-            <Button
-              onClick={() => setIsScheduleDialogOpen(true)}
-              className="gap-2"
-            >
-              <Calendar className="w-4 h-4" />
-              Schedule a Call
-            </Button>
+            {!isExistingUser && (
+              <Button
+                onClick={() => setIsScheduleDialogOpen(true)}
+                className="gap-2"
+              >
+                <Calendar className="w-4 h-4" />
+                Schedule a Call
+              </Button>
+            )}
           </div>
         </div>
       </div>
