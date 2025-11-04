@@ -74,12 +74,43 @@ export const QuestionRenderer = ({ question, answer, onAnswer, allAnswers }: Que
         );
 
       case 'numeric':
+        const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          const value = e.target.value;
+          
+          // Allow empty input
+          if (value === '') {
+            onAnswer(question.id, '');
+            return;
+          }
+          
+          const numValue = Number(value);
+          
+          // Check if value is a valid number
+          if (isNaN(numValue)) {
+            return;
+          }
+          
+          // Enforce max validation
+          if (question.validation?.max !== undefined && numValue > question.validation.max) {
+            onAnswer(question.id, question.validation.max);
+            return;
+          }
+          
+          // Enforce min validation
+          if (question.validation?.min !== undefined && numValue < question.validation.min) {
+            onAnswer(question.id, question.validation.min);
+            return;
+          }
+          
+          onAnswer(question.id, numValue);
+        };
+
         return (
           <div className="max-w-xs">
             <Input
               type="number"
               value={answer || ''}
-              onChange={(e) => onAnswer(question.id, Number(e.target.value))}
+              onChange={handleNumericChange}
               placeholder="Enter Value"
               min={question.validation?.min}
               max={question.validation?.max}
@@ -88,6 +119,11 @@ export const QuestionRenderer = ({ question, answer, onAnswer, allAnswers }: Que
             {question.validation?.max && (
               <p className="text-sm text-muted-foreground mt-2">
                 Maximum: {question.validation.max}
+              </p>
+            )}
+            {question.validation?.min !== undefined && (
+              <p className="text-sm text-muted-foreground mt-1">
+                Minimum: {question.validation.min}
               </p>
             )}
           </div>

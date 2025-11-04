@@ -480,9 +480,10 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
             {!isExistingUser && (
               <Button
                 onClick={() => setIsScheduleDialogOpen(true)}
-                className="gap-2"
+                size="lg"
+                className="gap-3 text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 bg-gradient-to-r from-primary to-primary/90"
               >
-                <Calendar className="w-4 h-4" />
+                <Calendar className="w-5 h-5" />
                 Schedule a Call
               </Button>
             )}
