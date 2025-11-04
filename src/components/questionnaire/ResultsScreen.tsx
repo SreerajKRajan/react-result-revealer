@@ -311,7 +311,7 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
         }
       `}</style>
       
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12 pb-32">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 p-4 py-12 pb-48">
         <div className="max-w-6xl mx-auto space-y-8 animate-fade-in" id="printable-content" ref={printRef}>
           {/* Header */}
           <Card className="p-8 md:p-12">
@@ -452,35 +452,12 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
             </div>
           </div>
 
-          {/* Contact Information */}
-          <div className="bg-muted/30 rounded-lg p-6 mb-32">
-            <div className="max-w-4xl mx-auto">
-              <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm">
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-primary" />
-                  <a href="tel:8334140800" className="hover:underline font-medium text-foreground">
-                    833-414-0800
-                  </a>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-primary" />
-                  <a href="mailto:info@advancedtaxgroup.com" className="hover:underline font-medium text-foreground">
-                    info@advancedtaxgroup.com
-                  </a>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Globe className="w-4 h-4 text-primary" />
-                  <a href="https://advancedtaxgroup.com" target="_blank" rel="noopener noreferrer" className="hover:underline font-medium text-foreground">
-                    advancedtaxgroup.com
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Spacer for sticky buttons */}
+          <div className="h-32" />
         </div>
 
-        {/* Sticky Action Buttons */}
-        <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg z-40 no-print">
+        {/* Sticky Action Buttons - positioned above footer */}
+        <div className="sticky bottom-[88px] left-0 right-0 bg-background/95 backdrop-blur-sm border-y border-border shadow-lg z-40 no-print mb-0">
           <div className="max-w-6xl mx-auto px-4 py-4">
             <div className="flex flex-wrap gap-3 justify-center items-center">
               <Button
@@ -511,6 +488,32 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
                   Schedule a Call
                 </Button>
               )}
+            </div>
+          </div>
+        </div>
+
+        {/* Contact Footer - Fixed at bottom */}
+        <div className="fixed bottom-0 left-0 right-0 bg-primary text-primary-foreground shadow-lg z-50 no-print">
+          <div className="max-w-6xl mx-auto px-4 py-5">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm">
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4" />
+                <a href="tel:8334140800" className="hover:underline font-medium">
+                  833-414-0800
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4" />
+                <a href="mailto:info@advancedtaxgroup.com" className="hover:underline font-medium">
+                  info@advancedtaxgroup.com
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                <a href="https://advancedtaxgroup.com" target="_blank" rel="noopener noreferrer" className="hover:underline font-medium">
+                  advancedtaxgroup.com
+                </a>
+              </div>
             </div>
           </div>
         </div>
