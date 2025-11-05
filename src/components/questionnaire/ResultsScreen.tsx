@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, ArrowLeft, Download, Phone, Mail, Globe, Calendar } from 'lucide-react';
 import { ResultStatement } from '@/types/questionnaire';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import html2pdf from 'html2pdf.js';
 import { jsPDF } from 'jspdf';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -31,6 +31,17 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
   // Check if user is an existing user
   const isExistingUser = searchParams.get('user') === 'existing-clients';
 
+  // Auto-open popup after 5 seconds
+  useEffect(() => {
+    if (!isExistingUser) {
+      const timer = setTimeout(() => {
+        setIsScheduleDialogOpen(true);
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isExistingUser]);
+
   // Function to split full name into first and last name
   const splitName = (fullName: string) => {
     const parts = fullName.trim().split(' ');
@@ -42,21 +53,9 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
     return { firstName, lastName };
   };
 
-  // Construct booking URL with user info
+  // Booking URL
   const getBookingUrl = () => {
-    if (!userInfo) return '';
-    
-    const { firstName, lastName } = splitName(userInfo.name);
-    const params = new URLSearchParams({
-      first_name: firstName,
-      last_name: lastName,
-      email: userInfo.email,
-      phone: userInfo.phone,
-    });
-
-    console.log("params: ", params.toString())
-    
-    return `https://api.leadconnectorhq.com/widget/booking/x4vi85Pz2LuLzmS5lGCd?${params.toString()}`;
+    return 'https://api.leadconnectorhq.com/widget/bookings/atg-nick-dixon-call';
   };
 
   // Function to parse text with bold and italic formatting
@@ -485,32 +484,37 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
         {/* Sticky Action Buttons */}
         <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg z-40 no-print">
           <div className="max-w-6xl mx-auto px-4 py-4">
-            <div className="flex flex-wrap gap-3 justify-center items-center">
-              <Button
-                variant="outline"
-                onClick={onReview}
-                className="gap-2 hover:bg-accent transition-colors"
-                size="lg"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Review Answers
-              </Button>
-              <Button
-                onClick={handleDownloadPDF}
-                className="gap-2 hover:bg-accent transition-colors"
-                variant="outline"
-                size="lg"
-              >
-                <Download className="w-4 h-4" />
-                Download PDF
-              </Button>
+            <div className="flex flex-col gap-3 items-center">
+              {/* Top row: Review and Download buttons */}
+              <div className="flex flex-wrap gap-3 justify-center items-center">
+                <Button
+                  variant="outline"
+                  onClick={onReview}
+                  className="gap-2 hover:bg-accent transition-colors"
+                  size="lg"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Review Answers
+                </Button>
+                <Button
+                  onClick={handleDownloadPDF}
+                  className="gap-2 hover:bg-accent transition-colors"
+                  variant="outline"
+                  size="lg"
+                >
+                  <Download className="w-4 h-4" />
+                  Download PDF
+                </Button>
+              </div>
+              
+              {/* Bottom row: Schedule a Call button (larger) */}
               {!isExistingUser && (
                 <Button
                   onClick={() => setIsScheduleDialogOpen(true)}
                   size="lg"
-                  className="gap-3 text-lg px-10 py-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-gradient-to-r from-primary via-primary to-primary/90 font-semibold"
+                  className="gap-3 text-2xl px-16 py-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-gradient-to-r from-primary via-primary to-primary/90 font-semibold w-full max-w-2xl"
                 >
-                  <Calendar className="w-5 h-5" />
+                  <Calendar className="w-6 h-6" />
                   Schedule a Call
                 </Button>
               )}
@@ -521,19 +525,21 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
 
       {/* Schedule Call Dialog */}
       <Dialog open={isScheduleDialogOpen} onOpenChange={setIsScheduleDialogOpen}>
-      <DialogContent className="max-w-6xl h-[80vh] p-0 flex flex-col">
-  <DialogHeader className="p-6 pb-0">
-    <DialogTitle>Schedule a Call with ATG</DialogTitle>
-  </DialogHeader>
-  
-  <div className="flex-1 p-6 pt-2">
-    <iframe
-      src={getBookingUrl()}
-      className="w-full h-full border-0 rounded-lg"
-      title="Schedule a Call"
-    />
-  </div>
-</DialogContent>
+        <DialogContent className="max-w-6xl h-[80vh] p-0 flex flex-col">
+          <DialogHeader className="p-6 pb-4">
+            <DialogTitle className="text-2xl font-bold text-center">
+              Don't Forget To Schedule Your Free Consultation!
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="flex-1 p-6 pt-2">
+            <iframe
+              src={getBookingUrl()}
+              className="w-full h-full border-0 rounded-lg"
+              title="Schedule a Call"
+            />
+          </div>
+        </DialogContent>
       </Dialog>
     </>
   );
