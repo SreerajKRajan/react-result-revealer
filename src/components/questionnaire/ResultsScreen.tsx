@@ -8,8 +8,8 @@ import { jsPDF } from 'jspdf';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { UserInfo } from './UserInfoForm';
 import { useSearchParams } from 'react-router-dom';
-// import atgLogo from '@/assets/atg-logo-footer.jpeg';
 import atgLogo from '@/assets/atg-logo.svg';
+import atgLogoPdf from '@/assets/atg-logo-footer.jpeg';
 
 
 
@@ -122,9 +122,9 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
 
     // Add logo at the top
     try {
-      const logoWidth = 40;
-      const logoHeight = 25;
-      pdf.addImage(atgLogo, 'JPEG', margin, yPosition, logoWidth, logoHeight);
+      const logoWidth = 50;
+      const logoHeight = 31;
+      pdf.addImage(atgLogoPdf, 'JPEG', margin, yPosition, logoWidth, logoHeight);
       yPosition += logoHeight + 10;
     } catch (error) {
       console.error('Error adding logo to PDF:', error);
