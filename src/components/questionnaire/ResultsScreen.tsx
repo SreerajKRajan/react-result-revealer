@@ -9,7 +9,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { UserInfo } from './UserInfoForm';
 import { useSearchParams } from 'react-router-dom';
 import atgLogo from '@/assets/atg-logo.svg';
-import atgLogoPdf from '@/assets/atg-logo-footer.jpeg';
+// import atgLogoPdf from '@/assets/atg-logo-footer.jpeg';
+
+import atgLogoPdf from '@/assets/ATG_logo_1.png';
 
 
 
@@ -120,11 +122,14 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
     const maxWidth = pageWidth - (margin * 2);
     let yPosition = margin;
 
+
+    
+
     // Add logo at the top
     try {
-      const logoWidth = 50;
-      const logoHeight = 31;
-      pdf.addImage(atgLogoPdf, 'JPEG', margin, yPosition, logoWidth, logoHeight);
+      const logoWidth = 35;
+      const logoHeight = 21;
+      pdf.addImage(atgLogoPdf, 'PNG', margin, yPosition, logoWidth, logoHeight);
       yPosition += logoHeight + 10;
     } catch (error) {
       console.error('Error adding logo to PDF:', error);
