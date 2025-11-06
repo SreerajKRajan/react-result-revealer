@@ -8,6 +8,7 @@ import { jsPDF } from 'jspdf';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { UserInfo } from './UserInfoForm';
 import { useSearchParams } from 'react-router-dom';
+import atgLogo from '@/assets/atg-logo-footer.jpeg';
 
 
 interface ResultsScreenProps {
@@ -116,6 +117,16 @@ export const ResultsScreen = ({ results, thankYouData, onReview, userInfo }: Res
     const margin = 20;
     const maxWidth = pageWidth - (margin * 2);
     let yPosition = margin;
+
+    // Add logo at the top
+    try {
+      const logoWidth = 40;
+      const logoHeight = 25;
+      pdf.addImage(atgLogo, 'JPEG', margin, yPosition, logoWidth, logoHeight);
+      yPosition += logoHeight + 10;
+    } catch (error) {
+      console.error('Error adding logo to PDF:', error);
+    }
 
     // Helper function to add text with word wrap
     const addText = (text: string, fontSize: number, isBold: boolean = false, color: string = '#000000', indent: number = 0) => {
