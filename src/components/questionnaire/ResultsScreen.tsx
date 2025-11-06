@@ -8,7 +8,9 @@ import { jsPDF } from 'jspdf';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { UserInfo } from './UserInfoForm';
 import { useSearchParams } from 'react-router-dom';
-import atgLogo from '@/assets/atg-logo-footer.jpeg';
+// import atgLogo from '@/assets/atg-logo-footer.jpeg';
+import atgLogo from '@/assets/atg-logo.svg';
+
 
 
 interface ResultsScreenProps {
